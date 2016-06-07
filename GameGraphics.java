@@ -50,8 +50,8 @@ public class GameGraphics extends JPanel{
 	}
 	
 	private void drawGame(Graphics2D g2) {
-		drawRoom(g2);
-		drawCharactors(g2);
+		//drawRoom(g2);
+		//drawCharactors(g2);
 	}
 	
 	private void drawRoom(Graphics2D g2) {
