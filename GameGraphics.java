@@ -3,70 +3,69 @@ package Graphics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
+import Charactor.Charactor;
+import Charactor.Enemy;
 import Charactor.Player;
 import Main.Game;
 import Main.Media;
-import Map.Room;
 
 public class GameGraphics extends JPanel{
 	private final int GAMEPLAY_SCREEN_WIDTH = 1024, GAMEPLAY_SCREEN_HEIGHT = 768;
 	private Image gameInterface;
 	private Image background;
 	private Rectangle backgroundDim;
-	private double scale;
-	private Point origin;
-	private Room currentRoom;
+	private Rectangle gameDim;
 	private Player player;
-	private Rectangle temp;
 	
 	public GameGraphics() {
 		gameInterface = new ImageIcon(getClass().getResource("/PlayerInterfaceV1.jpg")).getImage();
-		/*
+		//gameInterface = Media.changeWhiteToTransparent(Media.toBufferedImage(gameInterface));
+		background = new Media("city1", "image").getImage();
+		player = Game.getPlayer();
 		Rectangle r = Screen.getFrameDim();
 		int w = GAMEPLAY_SCREEN_WIDTH;
 		int h = GAMEPLAY_SCREEN_HEIGHT;
 		double scale1 = r.getWidth()/w, scale2 = r.getHeight()/h;
 		if(scale1 > scale2) {
-			scale = scale2;
-			origin = new Point(0, (int)Math.abs((h * scale1) - r.getHeight()) / 2);
+			gameDim = new Rectangle((int)Math.abs((w * scale2) - r.getWidth()) / 2, 0, (int)(w * scale2), (int)r.getHeight());
 		} else {
-			scale = scale1;
-			origin = new Point((int)Math.abs((w * scale2) - r.getWidth()) / 2, 0);
+			gameDim = new Rectangle(0, (int)Math.abs((h * scale1) - r.getHeight()) / 2, (int)r.getWidth(), (int)(h * scale1));
 		}
-		*/
-		Rectangle r = Screen.getFrameDim();
-		temp = null;
-		int w = gameInterface.getWidth(this);
-		int h = gameInterface.getHeight(this);
-		double scale1 = r.getWidth()/w, scale2 = r.getHeight()/h;
-		if(scale1 > scale2) {
-			temp = new Rectangle(0, (int)Math.abs((h * scale1) - r.getHeight()) / 2 * -1, (int)r.getWidth(), (int)(h * scale1));
-		} else {
-			temp = new Rectangle((int)Math.abs((w * scale2) - r.getWidth()) / 2 * -1, 0, (int)(w * scale2), (int)r.getHeight());
-		}
-		background = new Media("city1", "image").getImage();
-		backgroundDim = r = Media.getBackgroundDim(background, this);
-		player = Game.getPlayer();
+		backgroundDim = Media.getBackgroundDim(background, this);
 	}
 	
 	public void paintComponent(Graphics g) {
 		Graphics2D g2 = (Graphics2D)g;
-		currentRoom = Game.getMap().getRoom(Game.getMap().getPlayerRoom());
 		g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 		g2.drawImage(background, (int)backgroundDim.getX(), (int)backgroundDim.getY(), (int)backgroundDim.getWidth(), (int)backgroundDim.getHeight(), this);
+		drawGame(g2);
 		//g2.drawImage(gameInterface, (int)origin.getX(), (int)origin.getY(), (int)(gameInterface.getWidth(this) * scale), (int)(gameInterface.getHeight(this) * scale), this);
-		g2.drawImage(gameInterface, (int)temp.getX(), (int)temp.getY(), (int)temp.getWidth(), (int)temp.getHeight(), this);
-		drawRoom(currentRoom, g2);
+		g2.drawImage(gameInterface, (int)gameDim.getX(), (int)gameDim.getY(), (int)gameDim.getWidth(), (int)gameDim.getHeight(), this);
 	}
 	
-	private void drawRoom(Room room, Graphics2D g2) {
+	private void drawGame(Graphics2D g2) {
+		drawRoom(g2);
+		drawCharactors(g2);
+	}
+	
+	private void drawRoom(Graphics2D g2) {
+		
+	}
+	
+	private void drawCharactors(Graphics2D g2) {
+		drawCharactor(player, g2);
+		Enemy[] e = Game.getEnemies();
+		for(int i = 0; i < e.length; i++)
+			drawCharactor(e[i], g2);
+	}
+	
+	private void drawCharactor(Charactor c, Graphics2D g2) {
 		
 	}
 }
