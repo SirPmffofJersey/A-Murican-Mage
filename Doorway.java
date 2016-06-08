@@ -1,4 +1,4 @@
-
+import java.awt.*;
 /**
  * Write a description of class Doorway here.
  * 
@@ -7,27 +7,24 @@
  */
 public class Doorway extends Obstacle
 {
-    //fields
-    private int roomNextIndex;
-    private int roomPreviousIndex;
-    private Rectangle dimensions;
+    //fields    
+    private int roomSendingToIndex;    
     
     //constructor
-    public Doorway()
+    public Doorway(int sendingToIndex)
+    {
+     super(new Rectangle(40,40), "Doorway disabled.gif");
+     roomSendingToIndex = sendingToIndex;
+    }
+    
+    //methods    
+    public int getRoomSendingToIndex()
+    {return roomSendingToIndex;}
+       
+
+    public void travel()
     {
      
     }
-    
-    //methods
-    public int getRoomNextIndex()
-    {return roomNextIndex;}     
-    
-    public int getRoomPreviousIndex()
-    {return roomPreviousIndex;}
-    
-    public void setRooms(int nextIndex, int prevIndex)
-    {
-     roomNextIndex = nextIndex;
-     roomPreviousIndex = prevIndex;
-    }
+
 }
