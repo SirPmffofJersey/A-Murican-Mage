@@ -16,7 +16,7 @@ public class Media {
 	
 	public Media(String n, String t) {
 		if(t.equals("image"))
-			image = new ImageIcon(getClass().getResource("/" + n + ".jpg")).getImage();
+			image = new ImageIcon(getClass().getResource("/" + n + ".png")).getImage();
 		type = t;
 		name = n;
 	}
