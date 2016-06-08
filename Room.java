@@ -13,15 +13,25 @@ public class Room
     private Rectangle dimensions;
     private String imageName;    
     private int roomIndex;
+    //different room sizes
+    
+    private static final Rectangle SIZE1 = new Rectangle(10,10);
+    private static final Rectangle SIZE2 = new Rectangle(15,5);
+    private static final Rectangle SIZE3 = new Rectangle(15,10);
+    private static final Rectangle SIZE4 = new Rectangle(7,7);
     
     //constructor(s)
-    public Room(Obstacle[] objs, Rectangle dim, String imgName, int rNum)
+    public Room(int rNum)
     {
-     for(int i = 0; i<objs.length; i++)
-      objects[i] = objs[i];     
-     dimensions = new Rectangle(dim);
-     imageName = imgName;
-     roomNumber = rNum;
+     roomIndex = rNum;
+     switch(roomIndex)
+     {
+      case 0:
+      dimensions = new Rectangle(SIZE4);
+      objects = new Obstacle[]{new Doorway(1)};
+      objects[0].setLoc(3*40,6*40);
+      
+     }
     }
     
     //methods
