@@ -1,15 +1,13 @@
-
-/**
- * Write a description of class Player here.
- * 
- * @author (your name) 
- * @version (a version number or a date)
- */
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.util.ArrayList;
 public class Player extends Character
 {
     private int exp = 0;
     private int expLimit = 100;
-
+    private Item e = new Sword();
+    private ArrayList<Item> inventory = new ArrayList<Item>();
+    
     public Player()
     {
        super("player", 100, 50, 100, 50, 30, 30, 40, new Point(0,0), new Rectangle(40,40), null, 1);
@@ -37,6 +35,11 @@ public class Player extends Character
         {
             setMana(getMana() + 1);
         }
+    }
+    
+    public void getLoot(Enemies other)
+    {
+        inventory.add(other.dropLoot());
     }
 }
         
