@@ -14,7 +14,7 @@ public class Obstacle
   
   public Obstacle(Rectangle dim, String imgName)
   {
-   dimensions = 
+   dimensions = new Rectangle(dim);
    imageName = new String(imgName);
   }
   
@@ -25,14 +25,17 @@ public class Obstacle
   {return dimensions.contains(dim) || dimensions.intersects(dim);}
   
   public String getImageName()
-  { return imageName; }
+  {return imageName;}
   
   public Rectangle getDimensions()
-  { return dimensions; }
+  {return dimensions;}
+  
+  public void setLoc(int x, int y)
+  {
+   dimensions.setLocation(x,y);
+  }
   
   public void setImage(String name)
-  {
-   
-  }
+  {imageName=name;}
   
 }
