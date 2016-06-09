@@ -18,10 +18,7 @@ public class Obstacle
    imageName = new String(imgName);
   }
   
-  public boolean colliding(Point pos)
-  {return dimensions.contains(pos);}
-  
-  public boolean colliding(Rectangle dim)
+  public boolean isColliding(Rectangle dim)
   {return dimensions.contains(dim) || dimensions.intersects(dim);}
   
   public String getImageName()
@@ -34,6 +31,9 @@ public class Obstacle
   {
    dimensions.setLocation(x,y);
   }
+  
+  public Point getLoc()
+  {return dimensions.getLocation();}
   
   public void setImage(String name)
   {imageName=name;}
