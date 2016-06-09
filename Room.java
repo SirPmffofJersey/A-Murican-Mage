@@ -26,35 +26,35 @@ public class Room
      roomIndex = rNum;
      switch(roomIndex)
      {
-      case 0:
+      case -1: //test room (Has nothing in it, not even doors)
+      dimensions = new Rectangle(SIZE4);
+      break;
+      
+      case 0: //Start room
       dimensions = new Rectangle(SIZE4);
       objects = new Obstacle[]{new Doorway(1)};
-      objects[0].setLoc(3*40,6*40);
+      objects[0].setLoc(3*40,6*40); //right door
+      break;
+      
+      case 1: //Room 1
+      dimensions = new Rectangle(SIZE2);
+      objects = new Obstacle[]{new Doorway(0), new Doorway(2)};
+      objects[0].setLoc(2*40,0); //left door
+      objects[1].setLoc(2*40,11*40); //top door
+      break;
+      
       
      }
     }
     
     //methods
     public Obstacle getObstacle(int index)
-    {}
-    
-    public Obstacle getCollidingObject(Point pos)
-    {}
-    
-    public Obstacle getCollidingObject(Rectangle dim)
-    {}
-    
-    public Doorway getDoor(int index)
-    {}
-    
-    public Doorway getEnteredDoor(Point pos)
-    {}
-    
-    public Doorway getEnteredDoor(Rectangle dim)
-    {}
+    {return objects[index];}
+            
+    public Point getEnteredDoor(Point p) //purpose: so as to find out where to place the player
+    {return }
     
     public Rectangle getDim()
-    {return dimensions;}
-    
+    {return dimensions;}    
     
 }
