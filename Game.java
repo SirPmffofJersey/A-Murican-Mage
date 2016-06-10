@@ -30,7 +30,7 @@ public class Game implements ActionListener{
         {
             timer.start();
             player = new Player();
-            currentRoom = 1;
+            currentRoom = -1;
             
             
         }
