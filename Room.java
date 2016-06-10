@@ -26,10 +26,6 @@ public class Room
      roomIndex = rNum;
      switch(roomIndex)
      {
-      case -1: //test room (Has nothing in it, not even doors)
-      dimensions = new Rectangle(SIZE4);
-      break;
-      
       case 0: //Start room
       dimensions = new Rectangle(SIZE4);
       objects = new Obstacle[]{new Doorway(1)};
