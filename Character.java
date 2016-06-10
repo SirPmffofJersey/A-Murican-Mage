@@ -193,35 +193,6 @@ public class Character
         }
     }
 
-    public void move(KeyEvent event)
-    {
-        if(event.getKeyChar()=='w')
-        {
-            location.move((int)location.getX() - speed, (int)location.getY());
-            direction = 1;
-            state ++;
-        }
-        if(event.getKeyChar()=='d')
-        {
-            location.move((int)location.getX(), (int)location.getY() + speed);
-            direction = 2;
-            state ++;
-        }
-        if(event.getKeyChar()=='s')
-        {
-            location.move((int)location.getX() + speed, (int)location.getY());
-            direction = 3;
-            state ++;
-        }
-        if(event.getKeyChar()=='a')
-        {
-            location.move((int)location.getX(), (int)location.getY() - speed);
-            direction = 4;
-            state ++;
-        }
-
-    }
-
     public boolean isDead()
     {
         if(health == 0)
@@ -229,6 +200,112 @@ public class Character
             return true;
         }
         return false;
+    }
+    
+    public void move()
+    {
+        location.move((int)location.getX() + speed, (int)location.getY() + speed); 
+    }
+    
+    public void attacked(int a)
+    {
+        health -= (a - defense);  
+    }
+    
+    public boolean collision(Character c)
+    {
+        int coordinateX = Math.abs((int)c.getDimensions().getX()  - (int)location.getX());
+        int coordinateY = Math.abs((int)c.getDimensions().getY()  - (int)location.getY());
+        int distance = coordinateX + coordinateY; 
+        if(distance <= 50) 
+            return true;
+        return false; 
+    }
+    
+    public void hitWall() 
+    {
+        if(location.getX() >= 500)
+            setLocation(new Point(500, (int)location.getY())); 
+        if(location.getX() <= 0)
+            setLocation(new Point(0, (int)location.getY())); 
+        if(location.getY() >= 500)
+            setLocation(new Point((int)location.getX(), 500));
+        if(location.getY() <= 0) 
+            setLocation(new Point((int)location.getX(), 0));
+        
+    }
+    
+    public boolean canAttack(Character c)
+    {
+        int coordinateX = Math.abs((int)c.getDimensions().getX()  - (int)location.getX());
+        int coordinateY = Math.abs((int)c.getDimensions().getY()  - (int)location.getY());
+        int distance = coordinateX + coordinateY; 
+        if(distance <= 100) 
+            return true;
+        return false;  
+    }
+    
+    public void attack(Character c)
+    {
+        if(canAttack(c))
+        {
+            c.attacked(attack);
+        }
+    }
+    
+    public boolean canUseMagic(Character c, int manaCost)
+    {
+        int coordinateX = Math.abs((int)c.getDimensions().getX()  - (int)location.getX());
+        int coordinateY = Math.abs((int)c.getDimensions().getY()  - (int)location.getY());
+        int distance = coordinateX + coordinateY; 
+        if(distance <= 100 && mana > manaCost) 
+            return true;
+        return false;  
+    }
+    
+    public void magicAttack(Character c,int manaCost) 
+    {
+        if(canUseMagic(c, manaCost))
+        {
+            //c.attacked(magicAttack);
+            mana -= manaCost;
+        }
+    }
+    
+    public void moveTowardPlayer(Character c)
+    {
+        if(c.getX() > (int)location.getX())
+        {
+            setLocation((int)location.getX() + 10,(int)location.getY()); 
+            hitWall();
+        }
+        else if(c.getX() < (int)location.getX())
+        {
+            setLocation((int)location.getX() - 10,(int)location.getY()); 
+            hitWall();
+        }
+        if(c.getY() > (int)location.getY())
+        {
+            setLocation((int)location.getX(),(int)location.getY() + 10); 
+            hitWall();
+        }
+        else if(c.getY() < (int)location.getY())
+        {
+            setLocation((int)location.getX(),(int)location.getY() - 10);
+            hitWall();
+        }
+        
+        /*if(c.getX() > getX() && getY() == c.getY()) 
+            facing = 3;
+        else if(c.getX() < getX() && getY() == c.getY())
+            facing = 2; 
+        else if(c.getX() == getX() && getY() > c.getY())
+            facing = 4; 
+        else if(c.getX() == getX() && getY() < c.getY())
+            facing = 1;
+            
+            */
+        
     }
 
 }
