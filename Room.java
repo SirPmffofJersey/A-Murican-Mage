@@ -36,7 +36,7 @@ public class Room
       dimensions = new Rectangle(SIZE2);
       objects = new Obstacle[]{new Doorway(0), new Doorway(2)};
       objects[0].setLoc(2*40,0); //left door
-      objects[1].setLoc(2*40,11*40); //top door
+      objects[1].setLoc(0,11*40); //top door
       break;
       
       case 2: //Room 2
