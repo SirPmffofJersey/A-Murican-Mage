@@ -1,13 +1,10 @@
 package Main;
 
-mport java.awt.event.ActionEvent;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.Timer;
-
-import Charactor.Player;
-import Graphics.Screen;
-import Map.Map;
 
 public class Game implements ActionListener{
     private static boolean inGame;
@@ -16,24 +13,18 @@ public class Game implements ActionListener{
     private static Timer timer;
     private static Map map;
     private static Player player;
-    private int currentRoom;
+    private static int currentRoom;
+    private static ArrayList<Enemies> enemies;
  
     
     
     public static void main(String[] args){
+    	game = new Game();
+    	player = new Player();
         screen = new Screen();
-        game = new Game();
         timer = new Timer(100, game);
         map = new Map();
-        
-        while(inGame == true)
-        {
-            timer.start();
-            player = new Player();
-            currentRoom = -1;
-            
-            
-        }
+        timer.start();
     }
 
     public static void enterGame() {
@@ -48,8 +39,18 @@ public class Game implements ActionListener{
         return inGame;
     }
 
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent a) {
         screen.repaint();
+        if(inGame == true) {
+        	/*
+        	for(Enemies e: enemies) {
+        		if(e.isDead())
+        			enemies.remove(e);
+        		else
+        			e.moveTowardPlayer(player);
+        	}
+        	*/
+        }
     }
 
     public static Map getMap() {
@@ -60,5 +61,7 @@ public class Game implements ActionListener{
         return player;
     }
     
-    
+    public static ArrayList<Enemies> getEnemies() {
+    	return enemies;
+    }
 }
