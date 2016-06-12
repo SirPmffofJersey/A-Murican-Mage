@@ -274,22 +274,22 @@ public class Character
     
     public void moveTowardPlayer(Character c)
     {
-        if(c.getX() > (int)location.getX())
+        if(c.getLocation().getX() > (int)location.getX())
         {
             setLocation((int)location.getX() + 10,(int)location.getY()); 
             hitWall();
         }
-        else if(c.getX() < (int)location.getX())
+        else if(c.getLocation().getX() < (int)location.getX())
         {
             setLocation((int)location.getX() - 10,(int)location.getY()); 
             hitWall();
         }
-        if(c.getY() > (int)location.getY())
+        if(c.getLocation().getY() > (int)location.getY())
         {
             setLocation((int)location.getX(),(int)location.getY() + 10); 
             hitWall();
         }
-        else if(c.getY() < (int)location.getY())
+        else if(c.getLocation().getY() < (int)location.getY())
         {
             setLocation((int)location.getX(),(int)location.getY() - 10);
             hitWall();
