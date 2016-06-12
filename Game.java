@@ -14,6 +14,7 @@ public class Game implements ActionListener{
     private static Map map;
     private static Player player;
     private static int currentRoom;
+    private static int enemyAmount;
     private static ArrayList<Enemies> enemies;
  
     
@@ -42,14 +43,13 @@ public class Game implements ActionListener{
     public void actionPerformed(ActionEvent a) {
         screen.repaint();
         if(inGame == true) {
-        	/*
         	for(Enemies e: enemies) {
         		if(e.isDead())
         			enemies.remove(e);
         		else
         			e.moveTowardPlayer(player);
         	}
-        	*/
+        
         }
     }
 
@@ -63,5 +63,15 @@ public class Game implements ActionListener{
     
     public static ArrayList<Enemies> getEnemies() {
     	return enemies;
+    }
+    
+    public static generateEnemies(int room){
+        if(room == 0 || room == 2 || room == 4 || room == 8){qq
+            enemyAmount = 12;
+            for(int i =0; i < 12; i++){
+                enemies.add( new Enemies("Police officer.gif", 50, 0, 50, 0, 20, 20, 2, 1, new Point((int)(Math.random()* 340 + 100), (int)(Math.random()* 340 + 100), new Rectangle(40, 40), new Sword("Dagger"), 4)
+            }
+        }
+        
     }
 }
