@@ -2,13 +2,17 @@ package Graphics;
 
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import Main.Game;
 
-public class Screen extends JPanel{
+public class Screen extends JPanel implements MouseListener{
    /**
 	 * 
 	 */
@@ -25,6 +29,24 @@ public class Screen extends JPanel{
 		frame.setVisible(true);
 		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		frame.setContentPane(this);
+		frame.setFocusable(true);
+		frame.requestFocus();
+		frame.addKeyListener(new KeyAdapter()
+		{
+			
+			public void keyPressed(KeyEvent a)
+			{
+				System.out.println("What what");
+				if(a.getKeyCode() == KeyEvent.VK_ESCAPE) {
+					//if(Game.getGameState())
+						System.out.println("Hit Dat Button D0");
+						setMenu("Pause");
+				} else if(a.getKeyCode() == KeyEvent.VK_I) {
+					//if(Game.getGameState())
+						setMenu("Inventory");
+				}
+			}
+		});
 		
 		System.out.println("Set Menu");
         menu = new Menu("Start");
@@ -34,7 +56,12 @@ public class Screen extends JPanel{
         menu.addJComp(this);
         
         game = new GameGraphics();
+        addMouseListener(this);
     }
+	
+	public JFrame getFrame() {
+		return frame;
+	}
 	
 	public void paintComponent(Graphics g) {
 		//Image background = new Media("Flag", "image").getImage();
@@ -53,15 +80,18 @@ public class Screen extends JPanel{
 	public static void setMenu(String m) {
 		menuName = m;
 		if(m.equals("None")) {
-			Game.enterGame();
+			game.start(frame.getContentPane());
 			withinMenu = false;
 			menu.removeJComp(frame.getContentPane());
 			menu = null;
+			Game.enterGame();
 		} else {
 			System.out.println("Changing Menu");
 			Game.exitGame();
+			game.stop(frame.getContentPane());
 			withinMenu = true;
-			menu.removeJComp(frame.getContentPane());
+			if(menu != null)
+				menu.removeJComp(frame.getContentPane());
 			menu = new Menu(m);
 			menu.addJComp(frame.getContentPane());
 		}
@@ -74,4 +104,38 @@ public class Screen extends JPanel{
 	public static Menu getMenu() {return menu;}
 	
 	public static Rectangle getFrameDim() {return frame.getBounds();}
+	
+	public static GameGraphics getGameGraphics() {return game;}
+	
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+		System.out.println(e.getX());
+		System.out.println(e.getY());
+		//Hi doug 
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
 }
