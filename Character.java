@@ -259,5 +259,10 @@ public class Character {
 		 */
 
 	}
+	
+	public boolean insideMap(int roomNum)
+    	{
+        	return location.getX() <= new Room(roomNum).getDim().getX() && location.getY() <= new Room(roomNum).getDim().getY() && location.getX() > 0 && location.getY() > 0;
+    	}
 
 }
