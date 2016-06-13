@@ -9,7 +9,7 @@ public class Map
 {
    //fields
    private Room[] map;
-   private int playerRoomLoc;
+   private int currentRoomIndex;
    
    //constructor
    public Map()
@@ -21,6 +21,6 @@ public class Map
    public Room getRoom(int roomIndex)
    {return map[roomIndex];}
    
-   public int getPlayerRoomLoc()
-   {return playerRoomLoc;}
+    public int getCurrentRoomIndex()
+   {return currentRoomIndex;}
 }
