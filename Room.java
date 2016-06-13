@@ -29,14 +29,14 @@ public class Room
       case 0: //Start room
       dimensions = new Rectangle(SIZE4);
       objects = new Obstacle[]{new Doorway(1)};
-      objects[0].setLoc(4,7); //right door
+      objects[0].setLoc(400,700); //right door
       break;
       
       case 1: //Room 1
       dimensions = new Rectangle(SIZE2);
       objects = new Obstacle[]{new Doorway(0), new Doorway(2)};
-      objects[0].setLoc(3,1); //left door
-      objects[1].setLoc(1,12); //top door
+      objects[0].setLoc(300,100); //left door
+      objects[1].setLoc(100,1200); //top door
       break;
       
       case 2: //Room 2
