@@ -30,6 +30,7 @@ public class Room
       dimensions = new Rectangle(SIZE4);
       objects = new Obstacle[]{new Doorway(1)};
       objects[0].setLoc(400,700); //right door
+      imageName = "START (Room 0).PNG";
       break;
       
       case 1: //Room 1
@@ -37,6 +38,7 @@ public class Room
       objects = new Obstacle[]{new Doorway(0), new Doorway(2)};
       objects[0].setLoc(300,100); //left door
       objects[1].setLoc(100,1200); //top door
+      imageName = "Room 1.PNG";
       break;
       
       case 2: //Room 2
@@ -44,6 +46,7 @@ public class Room
       objects = new Obstacle[]{new Doorway(1), new Doorway(3)};
       objects[0].setLoc(700,300); //bottom door
       objects[1].setLoc(400,700); //right door
+      imageName = "Room 2.PNG";
       break;
       
       case 3: //Room 3
@@ -51,6 +54,7 @@ public class Room
       objects = new Obstacle[]{new Doorway(2), new Doorway(4)};
       objects[0].setLoc(300,100); //left door
       objects[1].setLoc(300,1000); //right door
+      imageName = "Room 3.PNG";
       break;
       
       case 4: //Room 
@@ -58,6 +62,7 @@ public class Room
       objects = new Obstacle[]{new Doorway(3), new Doorway(5)};
       objects[0].setLoc(400,100); //left door
       objects[1].setLoc(100,400); //top door
+      imageName = "Room 4.PNG";
       break;
       
       case 5: //Room 5
@@ -65,6 +70,7 @@ public class Room
       objects = new Obstacle[]{new Doorway(4), new Doorway(6)};
       objects[0].setLoc(1000,800); //bottom door
       objects[1].setLoc(600,100); //left door
+      imageName = "Room 5.PNG";
       break;
       
       case 6: //Room 6
@@ -72,6 +78,7 @@ public class Room
       objects = new Obstacle[]{new Doorway(5), new Doorway(7)};
       objects[0].setLoc(300,1500); //right door
       objects[1].setLoc(100,300); //top door
+      imageName = "Room 6.PNG";
       break;
       
       case 7: //Room 7
@@ -79,6 +86,7 @@ public class Room
       objects = new Obstacle[]{new Doorway(6), new Doorway(8)};
       objects[0].setLoc(300,100); //bottom door
       objects[1].setLoc(300,1000); //right door
+      imageName = "Room 7.PNG";
       break;
       
       case 8: //Room 8
@@ -86,18 +94,21 @@ public class Room
       objects = new Obstacle[]{new Doorway(7), new Doorway(9)};
       objects[0].setLoc(400,100); //left door
       objects[1].setLoc(100,400); //top door
+      imageName = "Room 8.PNG";
       break;
       
       case 9: //Room 9
       dimensions = new Rectangle(SIZE3);
-      objects = new Obstacle[]{new Doorway(8)}
+      objects = new Obstacle[]{new Doorway(8)};
       objects[0].setLoc(1000,800);
+      imageName = "Room 9.PNG";
       break;
       
       default: //if all else fails, make it the start room.
       dimensions = new Rectangle(SIZE4);
       objects = new Obstacle[]{new Doorway(1)};
       objects[0].setLoc(400,700); //right door
+      imageName = "START (Room 0).PNG";
       break;
      }     
     }
