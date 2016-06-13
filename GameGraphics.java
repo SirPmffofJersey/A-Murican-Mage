@@ -6,6 +6,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
@@ -17,6 +18,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
+import Charactor.Enemies;
+import Charactor.Player;
+import Main.Game;
+import Main.Media;
+import Map.Room;
+
 public class GameGraphics extends JPanel implements KeyListener{
 	private final int GAMEPLAY_SCREEN_WIDTH = 1024, GAMEPLAY_SCREEN_HEIGHT = 768;
 	private Image gameInterface;
@@ -24,7 +31,8 @@ public class GameGraphics extends JPanel implements KeyListener{
 	private Rectangle backgroundDim;
 	private Rectangle gameDim;
 	private Rectangle roomDisDim;
-	private Rectangle roomDim;
+	private Point innerRoom;
+	private double centiunitToPixel;
 	private Player player;
 	private JLabel[] labels;
 	
@@ -80,14 +88,16 @@ public class GameGraphics extends JPanel implements KeyListener{
 	}
 	
 	private void drawRoom(Graphics2D g2) {
-		Room room = Game.getMap().getRoom(Game.getMap().getPlayerRoomLoc());
+		Room room = Game.getMap().getCurrentRoom();
 		Image image = new ImageIcon(getClass().getResource("/" + room.getImageName() + ".png")).getImage();
 		int w = image.getWidth(this);
 		int h = image.getHeight(this);
 		double scale1 = roomDisDim.getWidth()/w, scale2 = roomDisDim.getHeight()/h;
 		if(scale1 > scale2) {
 			g2.drawImage(image, (int)(Math.abs((w * scale2) - roomDisDim.getWidth()) / 2 + roomDisDim.getX()), (int)roomDisDim.getY(), (int)(w * scale2), (int)roomDisDim.getHeight(), this);
-			roomDim = new Rectangle((int)((Math.abs((w * scale2) - roomDisDim.getWidth()) / 2 + roomDisDim.getX()) + (w * (1/room.getDim().getWidth()))), (int)(roomDisDim.getY() + (h * (1/room.getDim().getHeight()))), (int)((w * scale2) - (roomDisDim.getWidth() * (2/w))), (int)(roomDisDim.getHeight() - (roomDisDim.getWidth() * (2/h))));
+			//innerRoom = new Point((int)((Math.abs((w * scale2) - roomDisDim.getWidth()) / 2 + roomDisDim.getX()) + (w * (100/(room.getDim().getWidth() + 200)))), (int)(roomDisDim.getY() + (h * (100/(room.getDim().getHeight() + 200)))));
+			innerRoom = new Point((int)((Math.abs((w * scale2) - roomDisDim.getWidth()) / 2 + roomDisDim.getX()) + ((w * scale2) * (100/(room.getDim().getWidth() + 200)))), (int)(roomDisDim.getY() + (roomDisDim.getHeight() * (100/(room.getDim().getHeight() + 200)))));
+			centiunitToPixel = (w * scale2) / (room.getDim().getWidth() + 200);
 		} else {
 			g2.drawImage(image, (int)roomDisDim.getX(), (int)(Math.abs((h * scale1) - roomDisDim.getHeight()) / 2 + roomDisDim.getY()), (int)roomDisDim.getWidth(), (int)(h * scale1), this);
 		}
@@ -103,7 +113,7 @@ public class GameGraphics extends JPanel implements KeyListener{
 	
 	private void drawCharacter(Charactor.Character c, Graphics2D g2) {
 		Image image = new ImageIcon(getClass().getResource("/" + c.getImageName() + ".gif")).getImage();
-		g2.drawImage(image, (int)(roomDim.getX() + c.getLocation().getX()), (int)(roomDim.getY() + c.getLocation().getY()), (int)(c.getDimensions().getWidth()), (int)(c.getDimensions().getHeight()), this);
+		g2.drawImage(image, (int)(innerRoom.getX() + (c.getLocation().getX() * centiunitToPixel)), (int)(innerRoom.getY() + (c.getLocation().getY() * centiunitToPixel)), (int)(c.getDimensions().getWidth() * centiunitToPixel), (int)(c.getDimensions().getHeight() * centiunitToPixel), this);
 	}
 	
 	private void setJComp() {
