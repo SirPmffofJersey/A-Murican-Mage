@@ -196,8 +196,8 @@ public class Character {
 	}
 
 	public void hitWall() {
-		int maxX = (int)( Game.getMap().getRoom(Game.getMap().getPlayerRoomLoc()).getDim().getX());
-		int maxY = (int)(Game.getMap().getRoom(Game.getMap().getPlayerRoomLoc()).getDim().getY());
+		int maxX = (int)( Game.getMap().getCurrentRoom().getDim().getX());
+		int maxY = (int)(Game.getMap().getCurrentRoom().getDim().getY());
 		if (location.getX() >= maxX)
 			setLocation(new Point(maxX, (int) location.getY()));
 		if (location.getX() <= 0)
