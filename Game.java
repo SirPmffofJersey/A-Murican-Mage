@@ -67,9 +67,9 @@ public class Game implements ActionListener{
     
     public static generateEnemies(int room){
         if(room == 0 || room == 2 || room == 4 || room == 8){qq
-            enemyAmount = 12;
-            for(int i =0; i < 12; i++){
-                enemies.add( new Enemies("Police officer.gif", 50, 0, 50, 0, 20, 20, 2, 1, new Point((int)(Math.random()* 340 + 100), (int)(Math.random()* 340 + 100), new Rectangle(40, 40), new Sword("Dagger"), 4)
+            enemyAmount = 4;
+            for(int i =0; i < enemyAmount; i++){
+                enemies.add( new Enemies("Police officer.gif", 50, 0, 50, 0, 20, 20, 2, 1, new Point((int)(Math.random()* 340 + 100), (int)(Math.random()* 340 + 100), new Rectangle(100, 100), new Sword("Dagger"), 4)
             }
         }
         
