@@ -10,12 +10,15 @@ public class Player extends Character
 {
     private int exp = 0;
     private int expLimit = 100;
-    private Item e = new Sword("Dagger");
-    private ArrayList<Item> inventory = new ArrayList<Item>();
+    private Sword s = new Sword("Dagger");
+    private Potion[] potions;
     
     public Player()
     {
        super("player", 100, 50, 100, 50, 30, 30, 40, 1,new Point(0,0), new Rectangle(40,40), null, 1);
+       s = new Sword("Dagger");
+       potions[0] = new Potion(0);
+       potions[1] = new Potion(1);
     }
 
     public void levelUp()
@@ -69,6 +72,13 @@ public class Player extends Character
          {
              super.setLocation(new Point((int)super.getLocation().getX(),(int)super.getLocation().getY() + super.getSpeed())); 
            //  super.hitWall();
+         }
+         else if(e.getKeyCode() == KeyEvent.VK_Q)
+         {
+             if(potion[0].getEquipped)
+                potion[0].use(this);
+            else
+                potion[1].use(this);
          }
          
     }
