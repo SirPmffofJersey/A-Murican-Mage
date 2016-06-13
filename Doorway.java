@@ -22,9 +22,9 @@ public class Doorway extends Obstacle
     {return roomSendingToIndex;}
        
 
-    public void travel()
-    {
-     
-    }
+//    public void travel()
+//    {
+//     
+//    }
 
 }
