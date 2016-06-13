@@ -262,7 +262,7 @@ public class Character {
 	
 	public boolean insideMap(int roomNum)
     	{
-        	return location.getX() > new Room(roomNum).getDim().getX() && location.getY() > new Room(roomNum).getDim().getY() && location.getX() < new Room(roomNum).getDim().getX() + Room(roomNum).getDim().getWidth() && location.getY() < new Room(roomNum).getDim().getY() + Room(roomNum).getDim().getWidth();
+        	return location.getX() > new Room(roomNum).getDim().getX() && location.getY() > new Room(roomNum).getDim().getY() && location.getX() < new Room(roomNum).getDim().getX() + Room(roomNum).getDim().getWidth() && location.getY() < new Room(roomNum).getDim().getY() + Room(roomNum).getDim().getHeight();
     	}
 
 }
