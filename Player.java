@@ -13,14 +13,11 @@ public class Player extends Character
     private Sword s = new Sword("Dagger");
     private Potion[] potions;
     
-    public Player()
+    public Player(String name, int hp, int mp, int maxHp, int maxMp,int atk, int def, int spd, int lvl, Point loc, Rectangle dim, Item e,int direct)
     {
-       super("player", 100, 50, 100, 50, 30, 30, 40, 1,new Point(0,0), new Rectangle(40,40), null, 1);
-       s = new Sword("Dagger");
-       potions[0] = new Potion(0);
-       potions[1] = new Potion(1);
+        super(name,hp,mp,maxHp,maxMp,atk,def,spd,lvl,loc,dim,e,direct);
     }
-
+    
     public void levelUp()
     {
         setLevel(getLevel() +1);
@@ -54,44 +51,52 @@ public class Player extends Character
     {      
          if(e.getKeyCode() == KeyEvent.VK_W)
          {
-        	 System.out.println("tyes:");
-             setLocation(new Point((int)super.getLocation().getX(),(int)super.getLocation().getY() - super.getSpeed())); 
+             System.out.println("tyes:");
+             setLocation(new Point((int)getLocation().getX(),(int)getLocation().getY() - getSpeed())); 
              //hitWall();
          }
          else if(e.getKeyCode() == KeyEvent.VK_A)
          {
-             super.setLocation(new Point((int)super.getLocation().getX() - super.getSpeed(),(int)super.getLocation().getY())); 
+             setLocation(new Point((int)getLocation().getX() - getSpeed(),(int)getLocation().getY())); 
              //super.hitWall();
          }
          else if(e.getKeyCode() == KeyEvent.VK_D)
          {
-             super.setLocation(new Point((int)super.getLocation().getX() + super.getSpeed(),(int)super.getLocation().getY())); 
+             setLocation(new Point((int)getLocation().getX() + getSpeed(),(int)getLocation().getY())); 
             // super.hitWall();
          }
          else if(e.getKeyCode() == KeyEvent.VK_S)
          {
-             super.setLocation(new Point((int)super.getLocation().getX(),(int)super.getLocation().getY() + super.getSpeed())); 
+             setLocation(new Point((int)getLocation().getX(),(int)getLocation().getY() + getSpeed())); 
            //  super.hitWall();
-         }
-         else if(e.getKeyCode() == KeyEvent.VK_Q)
-         {
-             if(potion[0].getEquipped)
-                potion[0].use(this);
-            else
-                potion[1].use(this);
          }
          
     }
     
-    public void attack(KeyEvent e, Character c)
+    public void attack(MouseEvent e, Character c)
     {
-        if(e.getKeyCode() == KeyEvent.VK_M)
+        if(e.getClickCount() == 1)
         {
-            if(super.canAttack(c))
+            if(e.getButton() == MouseEvent.BUTTON1)
             {
-                c.attacked(super.getAttack());
-                if(c.getHealth() == 0)
-                    addExperiance();
+                System.out.println("You attacked"); 
+                if(canAttack(c))
+                {
+                    c.attacked(getAttack());
+                    if(c.getHealth() == 0)
+                        addExperiance();
+                }
+            }
+            if(e.getButton() == MouseEvent.BUTTON3)
+            {
+                System.out.println("You used a spell"); 
+                if(canUseMagic(c,0))
+                {
+                    c.magicAttack(c,0);
+                    c.attacked(getAttack());
+                    if(c.getHealth() == 0)
+                        addExperiance();
+                }
             }
         }
     }
@@ -101,7 +106,7 @@ public class Player extends Character
         exp += 10; 
         if(exp == 100)
         {
-            System.out.print("You leveled up, you are now level " + super.getLevel()); 
+            System.out.print("You leveled up, you are now level " + getLevel()); 
             exp = 0; 
             levelUp(); 
         }
