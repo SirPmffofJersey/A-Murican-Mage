@@ -13,7 +13,7 @@ public class Doorway extends Obstacle
     //constructor
     public Doorway(int sendingToIndex)
     {
-     super(new Rectangle(40,40), "Doorway disabled.gif");
+     super(new Rectangle(100,100), "Doorway disabled.gif");
      roomSendingToIndex = sendingToIndex;
     }
     
