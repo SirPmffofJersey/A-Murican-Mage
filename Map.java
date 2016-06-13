@@ -17,7 +17,7 @@ public class Map
     map = new Room[]{new Room(0), new Room(1), new Room(2), new Room(3),
                      new Room(4), new Room(5), new Room(6), new Room(7),
                      new Room(8), new Room(9)};
-    currentRoom = 0;                 
+    currentRoomIndex = 0;                 
    }
    
    //methods
