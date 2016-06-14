@@ -16,7 +16,7 @@ public class Game implements ActionListener{
     private static int currentRoom;
     private static int enemyAmount;
     private static ArrayList<Enemies> enemies;
- 
+    private static ArrayList<Projectile> projectiles;
     
     
     public static void main(String[] args){
@@ -49,8 +49,15 @@ public class Game implements ActionListener{
         		else
         			e.moveTowardPlayer(player);
         	}
-        
+        	
+        	for(Pojectile p: projectiles){
+        	    if(p.toBeRemoved())
+        	        projectiles.remove(p);
+        	    else
+        	        p.move();
+        	}
         }
+        
     }
 
     public static Map getMap() {
@@ -66,7 +73,7 @@ public class Game implements ActionListener{
     }
     
     public static generateEnemies(int room){
-        if(room == 0 || room == 2 || room == 4 || room == 8){qq
+        if(room == 0 || room == 2 || room == 4 || room == 8){
             enemyAmount = 4;
             for(int i =0; i < enemyAmount; i++){
                 enemies.add( new Enemies("Police officer.gif", 50, 0, 50, 0, 20, 20, 2, 1, new Point((int)(Math.random()* 340 + 100), (int)(Math.random()* 340 + 100), new Rectangle(100, 100), new Sword("Dagger"), 4)
@@ -74,4 +81,10 @@ public class Game implements ActionListener{
         }
         
     }
+    
+    public static addProjectiles(Spell type, Point mouseLoc){
+        projectiles.add(new Projectile(type, mouseLoc));
+    }
+    
+    
 }
