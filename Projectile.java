@@ -4,11 +4,11 @@ import java.awt.Point;
 import java.awt.Rectangle;
 
 import Main.Game;
-import Spell.Spell;
+import Spell.AttackSpell;
 
 public class Projectile {
 	private Rectangle dim;
-	private Spell type;
+	private AttackSpell type;
 	private int xRange;
 	private int yRange;
 	private String image;
@@ -16,7 +16,7 @@ public class Projectile {
 	private double angle;
 	private boolean toBeRemoved;
 	
-	public Projectile(Spell t, Point mouse) {
+	public Projectile(AttackSpell t, Point mouse) {
 		type = t;
 		angle = Math.atan(Game.getPlayer().getDimensions().getCenterY() - mouse.getY()/Game.getPlayer().getDimensions().getCenterX() - mouse.getX());
 		yRange = (int) (t.getRange() * Math.sin(Math.toRadians(angle)));
