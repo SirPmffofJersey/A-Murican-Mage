@@ -1,10 +1,10 @@
-import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
+import java.awt.event.MouseEvent;
 
 import Item.Item;
+import Item.Potion;
 import Item.Sword;
 public class Player extends Character
 {
@@ -12,10 +12,18 @@ public class Player extends Character
     private int expLimit = 100;
     private Sword s = new Sword("Dagger");
     private Potion[] potions;
+	private boolean saberUnlocked;
+	private boolean katanaUnlocked;
     
-    public Player(String name, int hp, int mp, int maxHp, int maxMp,int atk, int def, int spd, int lvl, Point loc, Rectangle dim, Item e,int direct)
+    public Player()
     {
-        super(name,hp,mp,maxHp,maxMp,atk,def,spd,lvl,loc,dim,e,direct);
+        super("player",50,50,100,100,10,10,10,1,new Point(50, 50), new Rectangle(100, 100), new Sword("Dagger"), 1);
+        potions = new Potion[2];
+		potions[0] = new Potion(0);
+		potions[1] = new Potion(1);
+		potions[0].setEquipped(true);
+		saberUnlocked = true;
+		katanaUnlocked = true;
     }
     
     public void levelUp()
@@ -47,28 +55,58 @@ public class Player extends Character
         //inventory.add(other.dropLoot());
     }
     
+    public Potion getEquippedPotion() {
+		if(potions[0].getEquipped())
+			return potions[0];
+		return potions[1];
+	}
+    
+    public String getEquippedPotionName() {
+    	if(potions[0].getEquipped())
+			return "Health";
+		return "Mana";
+    }
+
+	public void setSelectedPotion(String type) {
+		if(type.equals("Health")) {
+			potions[0].setEquipped(true);
+			potions[1].setEquipped(false);
+		} else {
+			potions[0].setEquipped(false);
+			potions[1].setEquipped(true);
+		}
+	}
+	
+	public boolean getSaberUnlocked() {return saberUnlocked;}
+	
+	public boolean getKatanaUnlocked() {return katanaUnlocked;}
+	
+	public void setSaberUnlocked(boolean s) {saberUnlocked = s;}
+	
+	public void setKatanaUnlocked(boolean k) {katanaUnlocked = k;}
+    
     public void move(KeyEvent e) 
     {      
          if(e.getKeyCode() == KeyEvent.VK_W)
          {
              System.out.println("tyes:");
              setLocation(new Point((int)getLocation().getX(),(int)getLocation().getY() - getSpeed())); 
-             //hitWall();
+             super.hitWall();
          }
          else if(e.getKeyCode() == KeyEvent.VK_A)
          {
              setLocation(new Point((int)getLocation().getX() - getSpeed(),(int)getLocation().getY())); 
-             //super.hitWall();
+             super.hitWall();
          }
          else if(e.getKeyCode() == KeyEvent.VK_D)
          {
              setLocation(new Point((int)getLocation().getX() + getSpeed(),(int)getLocation().getY())); 
-            // super.hitWall();
+             super.hitWall();
          }
          else if(e.getKeyCode() == KeyEvent.VK_S)
          {
              setLocation(new Point((int)getLocation().getX(),(int)getLocation().getY() + getSpeed())); 
-           //  super.hitWall();
+             super.hitWall();
          }
          
     }
