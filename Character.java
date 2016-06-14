@@ -1,9 +1,9 @@
 import java.awt.Point;
 import java.awt.Rectangle;
 
-import Item.Item;
 import Item.Sword;
 import Main.Game;
+import Map.Room;
 
 /**
  * Abstract class Character - write a description of the class here
@@ -27,10 +27,9 @@ public class Character {
 	private Rectangle dimensions;
 	private Point location;
 	private String imageName;
-	private Item equip;
-
+	private Sword sword;
 	public Character(String name, int hp, int mp, int maxHp, int maxMp, int atk, int def, int spd, int lvl, Point loc,
-			Rectangle dim, Item e, int direct) {
+			Rectangle dim, Sword s, int direct) {
 		imageName = name;
 		health = hp;
 		mana = mp;
@@ -42,7 +41,7 @@ public class Character {
 		level = lvl;
 		location = loc;
 		dimensions = dim;
-		equip = e;
+		sword = s;
 		direction = direct;
 		state = 0;
 	}
@@ -96,8 +95,8 @@ public class Character {
 		return imageName;
 	}
 
-	public Item getEquip() {
-		return equip;
+	public Sword getSword() {
+		return sword;
 	}
 
 	public Point getLocation() {
@@ -149,8 +148,8 @@ public class Character {
 		imageName = name;
 	}
 
-	public void setEquip(Item e) {
-		equip = e;
+	public void setSword(Sword s) {
+		sword = s;
 	}
 
 	public void setLocation(Point loc) {
@@ -162,7 +161,6 @@ public class Character {
 	}
 
 	public void attack(Character other) {
-		Sword sword = (Sword) equip;
 		if (other.location.getX() - location.getX() <= sword.getRange()
 				|| other.location.getY() - location.getY() <= sword.getRange()
 				|| (other.location.getY() - location.getY()) / (other.location.getX() - location.getX()) <= sword
@@ -262,7 +260,7 @@ public class Character {
 	
 	public boolean insideMap(int roomNum)
     	{
-        	return location.getX() > new Room(roomNum).getDim().getX() && location.getY() > new Room(roomNum).getDim().getY() && location.getX() < new Room(roomNum).getDim().getX() + Room(roomNum).getDim().getWidth() && location.getY() < new Room(roomNum).getDim().getY() + Room(roomNum).getDim().getHeight();
+        	return location.getX() > new Room(roomNum).getDim().getX() && location.getY() > new Room(roomNum).getDim().getY() && location.getX() < new Room(roomNum).getDim().getX() + new Room(roomNum).getDim().getWidth() && location.getY() < new Room(roomNum).getDim().getY() + new Room(roomNum).getDim().getHeight();
     	}
 
 }
