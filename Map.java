@@ -31,4 +31,9 @@ public class Map
    
     public int getCurrentRoomIndex()
    {return currentRoomIndex;}
+   
+   public void setCurrentRoom(int index)
+   {
+    currentRoomIndex = index;
+   }
 }
