@@ -27,6 +27,8 @@ public class Character {
 	private int level;
 	private int direction;
 	private int state;
+	private int seconds;
+	 private boolean immune = false; 
 	// private Buffs[] buffs;
 	private Rectangle dimensions;
 	private Point location;
@@ -49,6 +51,7 @@ public class Character {
 		direction = direct;
 		state = 0;
 		image = new ImageIcon(getClass().getResource("/" + name + direction + ".gif")).getImage();
+		seconds = 0;
 	}
 
 	// Accessor Methods
@@ -191,7 +194,27 @@ public class Character {
 	}
 
 	public void attacked(int a) {
-		health -= (a - defense);
+		if((a + sword.getDamage() - defense) <= 0 && !immune)
+            		health -= 1; 
+        	else if(!immune) 
+            		health -= (a + sword.getDamage() - defense);
+                    
+        	Timer timer = new Timer();
+        	TimerTask task = new TimerTask(){
+            	public void run()
+            	{
+                	seconds ++; 
+                	immune = true; 
+                	if(seconds >= 8)
+                	{
+                    		immune = false;  
+                    		timer.cancel();
+                    		timer.purge(); 
+                	}
+            	}
+        
+        	timer.schedule(task,250); 
+        	//seconds = 0; 
 	}
 
 	public boolean collision(Character c) {
