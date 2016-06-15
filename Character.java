@@ -1,5 +1,8 @@
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
+
+import javax.swing.ImageIcon;
 
 import Item.Sword;
 import Main.Game;
@@ -13,6 +16,7 @@ import Map.Room;
  */
 public class Character {
 	// Basic Character Stats
+	private String name;
 	private int health;
 	private int mana;
 	private int maxHealth;
@@ -26,11 +30,11 @@ public class Character {
 	// private Buffs[] buffs;
 	private Rectangle dimensions;
 	private Point location;
-	private String imageName;
+	private Image image;
 	private Sword sword;
 	public Character(String name, int hp, int mp, int maxHp, int maxMp, int atk, int def, int spd, int lvl, Point loc,
 			Rectangle dim, Sword s, int direct) {
-		imageName = name;
+		this.name = name;
 		health = hp;
 		mana = mp;
 		maxHealth = maxHp;
@@ -44,6 +48,7 @@ public class Character {
 		sword = s;
 		direction = direct;
 		state = 0;
+		image = new ImageIcon(getClass().getResource("/" + name + direction + ".gif")).getImage();
 	}
 
 	// Accessor Methods
@@ -91,8 +96,8 @@ public class Character {
 	 * public Buffs[] getBuffs() { return buffs; }
 	 */
 
-	public String getImageName() {
-		return imageName;
+	public Image getImage() {
+		return image;
 	}
 
 	public Sword getSword() {
@@ -135,6 +140,11 @@ public class Character {
 	public void setLevel(int lvl) {
 		level = lvl;
 	}
+	
+	public void setDirection(int d) {
+		direction = d;
+		resetImage();
+	}
 
 	public void setDimensions(int x, int y) {
 		dimensions = new Rectangle(x, y);
@@ -144,8 +154,8 @@ public class Character {
 	 * public void setBuffs(Buffs[] b ) { buffs = b; }
 	 */
 
-	public void setImageName(String name) {
-		imageName = name;
+	public void resetImage() {
+		image = new ImageIcon(getClass().getResource("/" + name + direction + ".gif")).getImage();;
 	}
 
 	public void setSword(Sword s) {
@@ -233,20 +243,28 @@ public class Character {
 	}
 
 	public void moveTowardPlayer(Character c) {
+		int newD = 0;
 		if (c.getLocation().getX() > (int) location.getX()) {
 			setLocation(new Point((int) location.getX() + 10, (int) location.getY()));
-			//hitWall();
+			newD = 2;
+			hitWall();
 		} else if (c.getLocation().getX() < (int) location.getX()) {
 			setLocation(new Point((int) location.getX() - 10, (int) location.getY()));
-			//hitWall();
+			newD = 4;
+			hitWall();
 		}
 		if (c.getLocation().getY() > (int) location.getY()) {
 			setLocation(new Point((int) location.getX(), (int) location.getY() + 10));
-			//hitWall();
+			newD = 3;
+			hitWall();
 		} else if (c.getLocation().getY() < (int) location.getY()) {
 			setLocation(new Point((int) location.getX(), (int) location.getY() - 10));
-			//hitWall();
+			newD = 1;
+			hitWall();
 		}
+		
+		if(newD != 0 || newD != getDirection())
+			setDirection(newD);
 
 		/*
 		 * if(c.getX() > getX() && getY() == c.getY()) facing = 3; else
