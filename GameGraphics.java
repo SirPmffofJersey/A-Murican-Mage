@@ -25,6 +25,10 @@ import Main.Media;
 import Map.Room;
 
 public class GameGraphics extends JPanel implements KeyListener{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 420L;
 	private final int GAMEPLAY_SCREEN_WIDTH = 1024, GAMEPLAY_SCREEN_HEIGHT = 768;
 	private Image gameInterface;
 	private Image background;
@@ -63,9 +67,10 @@ public class GameGraphics extends JPanel implements KeyListener{
 		//g2.drawImage(gameInterface, (int)origin.getX(), (int)origin.getY(), (int)(gameInterface.getWidth(this) * scale), (int)(gameInterface.getHeight(this) * scale), this);
 		g2.setColor(Color.RED);
 		//g2.fillRect(400, 40, 293, 43);
-		g2.fillRect((int)(gameDim.getX() + gameDim.getWidth() * .11111111), (int)(gameDim.getY() + gameDim.getHeight() * 0.03981481), (int)(gameDim.getWidth() * 0.20347222 * ((double)Game.getPlayer().getHealth()/Game.getPlayer().getMaxHealth())), (int)(gameDim.getHeight() * 0.03981481 * ((double)Game.getPlayer().getMana()/Game.getPlayer().getMaxMana())));
+		g2.fillRect((int)(gameDim.getX() + gameDim.getWidth() * .11111111), (int)(gameDim.getY() + gameDim.getHeight() * 0.03981481), (int)(gameDim.getWidth() * 0.20347222 * ((double)Game.getPlayer().getHealth()/Game.getPlayer().getMaxHealth())), (int)(gameDim.getHeight() * 0.03981481));
 		g2.setColor(Color.BLUE);
-		g2.fillRect((int)(gameDim.getX() + gameDim.getWidth() * .11111111), (int)(gameDim.getY() + gameDim.getHeight() * 0.08981482), (int)(gameDim.getWidth() * 0.20347222), (int)(gameDim.getHeight() * 0.03981481));
+		updateLabels();
+		g2.fillRect((int)(gameDim.getX() + gameDim.getWidth() * .11111111), (int)(gameDim.getY() + gameDim.getHeight() * 0.08981482), (int)(gameDim.getWidth() * 0.20347222 * ((double)Game.getPlayer().getMana()/Game.getPlayer().getMaxMana())), (int)(gameDim.getHeight() * 0.03981481));
 		g2.drawImage(gameInterface, (int)gameDim.getX(), (int)gameDim.getY(), (int)gameDim.getWidth(), (int)gameDim.getHeight(), this);
 	}
 	
@@ -85,6 +90,7 @@ public class GameGraphics extends JPanel implements KeyListener{
 	private void drawGame(Graphics2D g2) {
 		drawRoom(g2);
 		drawCharacters(g2);
+		drawProjectiles(g2);
 	}
 	
 	private void drawRoom(Graphics2D g2) {
@@ -107,34 +113,159 @@ public class GameGraphics extends JPanel implements KeyListener{
 	private void drawCharacters(Graphics2D g2) {
 		drawCharacter(player, g2);
 		ArrayList<Enemies> e = Game.getEnemies();
-		for(int i = 0; i < e.size(); i++)
+		for(int i = 0; i < e.size(); i++) {
 			drawCharacter(e.get(i), g2);
+		}
 	}
 	
 	private void drawCharacter(Charactor.Character c, Graphics2D g2) {
-		Image image = new ImageIcon(getClass().getResource("/" + c.getImageName() + ".gif")).getImage();
+		Image image = c.getImage();
 		g2.drawImage(image, (int)(innerRoom.getX() + (c.getLocation().getX() * centiunitToPixel)), (int)(innerRoom.getY() + (c.getLocation().getY() * centiunitToPixel)), (int)(c.getDimensions().getWidth() * centiunitToPixel), (int)(c.getDimensions().getHeight() * centiunitToPixel), this);
+	}
+	
+	private void drawProjectiles(Graphics2D g2) {
+		
 	}
 	
 	private void setJComp() {
 		labels = new JLabel[11];
+		//
 		labels[0] = new JLabel("Level");
 		labels[0].setText("" + player.getLevel());
 		labels[0].setBounds((int)(gameDim.getWidth() * 0.03819444 + gameDim.getX()), (int)(gameDim.getHeight() * 0.06018518 + gameDim.getY()), (int)(gameDim.getWidth() * 0.03055555), (int)(gameDim.getHeight() * 0.04814814));
 		labels[0].setHorizontalAlignment(SwingConstants.CENTER);
 		labels[0].setVerticalAlignment(SwingConstants.CENTER);
 		labels[0].setFont(new Font("Jokerman", Font.BOLD, 20));
-		labels[0].setForeground(Color.MAGENTA);
+		labels[0].setForeground(Color.YELLOW);
+		//
 		labels[1] = new JLabel("Health Percentage");
+		labels[1].setText("" + (int)((double)player.getHealth() / player.getMaxHealth() * 100) + "%");
+		labels[1].setBounds((int)(gameDim.getX() + gameDim.getWidth() * .31458333 + 20), (int)(gameDim.getY() + gameDim.getHeight() * 0.03981481), 100, (int)(gameDim.getHeight() * 0.03981481));
+		labels[1].setHorizontalAlignment(SwingConstants.LEFT);
+		labels[1].setVerticalAlignment(SwingConstants.CENTER);
+		labels[1].setFont(new Font("Arial", Font.PLAIN, 20));
+		labels[1].setForeground(Color.BLACK);
+		//
 		labels[2] = new JLabel("Mana Percentage");
-		labels[3] = null;
-		labels[4] = null;
-		labels[5] = null;
-		labels[6] = null;
-		labels[7] = null;
-		labels[8] = null;
-		labels[9] = null;
-		labels[10] = null;
+		labels[2].setText("" + (int)((double)player.getMana() / player.getMaxMana() * 100) + "%");
+		labels[2].setBounds((int)(gameDim.getX() + gameDim.getWidth() * .31458333 + 20), (int)(gameDim.getY() + gameDim.getHeight() * 0.08981482), 100, (int)(gameDim.getHeight() * 0.03981481));
+		labels[2].setHorizontalAlignment(SwingConstants.LEFT);
+		labels[2].setVerticalAlignment(SwingConstants.CENTER);
+		labels[2].setFont(new Font("Arial", Font.PLAIN, 20));
+		labels[2].setForeground(Color.BLACK);
+		//
+		labels[3] = new JLabel("Selected Sword");
+		labels[3].setText("" + player.getSword().getName());
+		labels[3].setBounds((int)(gameDim.getX() + gameDim.getWidth() * .03472222), (int)(gameDim.getY() + gameDim.getHeight() * 0.86666666), (int)(gameDim.getWidth() * 0.15277777), (int)(gameDim.getHeight() * 0.03703703));
+		labels[3].setHorizontalAlignment(SwingConstants.LEFT);
+		labels[3].setVerticalAlignment(SwingConstants.CENTER);
+		labels[3].setFont(new Font("Arial", Font.PLAIN, 20));
+		labels[3].setForeground(Color.BLACK);
+		//
+		labels[4] = new JLabel("Selected Consumable");
+		labels[4].setText("" + player.getEquippedPotionName() + " Potion");
+		labels[4].setBounds((int)(gameDim.getX() + gameDim.getWidth() * .03472222), (int)(gameDim.getY() + gameDim.getHeight() * 0.93981481), (int)(gameDim.getWidth() * 0.15277777), (int)(gameDim.getHeight() * 0.03703703));
+		labels[4].setHorizontalAlignment(SwingConstants.LEFT);
+		labels[4].setVerticalAlignment(SwingConstants.CENTER);
+		labels[4].setFont(new Font("Arial", Font.PLAIN, 20));
+		labels[4].setForeground(Color.BLACK);
+		//
+		labels[5] = new JLabel("Fire Lobber");
+		labels[5].setText("Locked");
+		if(true)
+			labels[5].setText("Fire Lobber");
+		labels[5].setBounds((int)(gameDim.getX() + gameDim.getWidth() * .26180555), (int)(gameDim.getY() + gameDim.getHeight() * 0.87407407), (int)(gameDim.getWidth() * 0.11111111), (int)(gameDim.getHeight() * 0.01851851));
+		labels[5].setHorizontalAlignment(SwingConstants.LEFT);
+		labels[5].setVerticalAlignment(SwingConstants.CENTER);
+		labels[5].setFont(new Font("Arial", Font.PLAIN, 20));
+		labels[5].setForeground(Color.BLACK);
+		//
+		labels[6] = new JLabel("Lightning Strike");
+		labels[6].setText("Locked");
+		if(true)
+			labels[6].setText("Lightning Strike");
+		labels[6].setBounds((int)(gameDim.getX() + gameDim.getWidth() * .26180555), (int)(gameDim.getY() + gameDim.getHeight() * 0.90925925), (int)(gameDim.getWidth() * 0.11111111), (int)(gameDim.getHeight() * 0.01851851));
+		labels[6].setHorizontalAlignment(SwingConstants.LEFT);
+		labels[6].setVerticalAlignment(SwingConstants.CENTER);
+		labels[6].setFont(new Font("Arial", Font.PLAIN, 20));
+		labels[6].setForeground(Color.BLACK);
+		//
+		labels[7] = new JLabel("\"Magic\" Powder");
+		labels[7].setText("Locked");
+		if(true)
+			labels[7].setText("\"Magic\" Powder");
+		labels[7].setBounds((int)(gameDim.getX() + gameDim.getWidth() * .26180555), (int)(gameDim.getY() + gameDim.getHeight() * 0.94259259), (int)(gameDim.getWidth() * 0.11111111), (int)(gameDim.getHeight() * 0.01851851));
+		labels[7].setHorizontalAlignment(SwingConstants.LEFT);
+		labels[7].setVerticalAlignment(SwingConstants.CENTER);
+		labels[7].setFont(new Font("Arial", Font.PLAIN, 20));
+		labels[7].setForeground(Color.BLACK);
+		//
+		labels[8] = new JLabel("Armor Plated Armor");
+		labels[8].setText("locked");
+		if(true)
+			labels[8].setText("Armor Plated Armor");
+		labels[8].setBounds((int)(gameDim.getX() + gameDim.getWidth() * .40138888), (int)(gameDim.getY() + gameDim.getHeight() * 0.87407407), (int)(gameDim.getWidth() * 0.22222222), (int)(gameDim.getHeight() * 0.01851851));
+		labels[8].setHorizontalAlignment(SwingConstants.LEFT);
+		labels[8].setVerticalAlignment(SwingConstants.CENTER);
+		labels[8].setFont(new Font("Arial", Font.PLAIN, 20));
+		labels[8].setForeground(Color.BLACK);
+		//
+		labels[9] = new JLabel("Enchanted Steel");
+		labels[9].setText("Locked");
+		if(true)
+			labels[9].setText("Enchanted Steel");
+		labels[9].setBounds((int)(gameDim.getX() + gameDim.getWidth() * .40138888), (int)(gameDim.getY() + gameDim.getHeight() * 0.90925925), (int)(gameDim.getWidth() * 0.11111111), (int)(gameDim.getHeight() * 0.01851851));
+		labels[9].setHorizontalAlignment(SwingConstants.LEFT);
+		labels[9].setVerticalAlignment(SwingConstants.CENTER);
+		labels[9].setFont(new Font("Arial", Font.PLAIN, 20));
+		labels[9].setForeground(Color.BLACK);
+		//
+		labels[10] = new JLabel("Mind Control");
+		labels[10].setText("Locked");
+		if(true)
+			labels[10].setText("Mind Control");
+		labels[10].setBounds((int)(gameDim.getX() + gameDim.getWidth() * .40138888), (int)(gameDim.getY() + gameDim.getHeight() * 0.94259259), (int)(gameDim.getWidth() * 0.11111111), (int)(gameDim.getHeight() * 0.01851851));
+		labels[10].setHorizontalAlignment(SwingConstants.LEFT);
+		labels[10].setVerticalAlignment(SwingConstants.CENTER);
+		labels[10].setFont(new Font("Arial", Font.PLAIN, 20));
+		labels[10].setForeground(Color.BLACK);
+	}
+	
+	private void updateLabels() {
+		labels[0].setText("" + player.getLevel());
+		labels[0].setBounds((int)(gameDim.getWidth() * 0.03819444 + gameDim.getX()), (int)(gameDim.getHeight() * 0.06018518 + gameDim.getY()), (int)(gameDim.getWidth() * 0.03055555), (int)(gameDim.getHeight() * 0.04814814));
+		labels[1].setText("" + (int)((double)player.getHealth() / player.getMaxHealth() * 100) + "%");
+		labels[1].setBounds((int)(gameDim.getX() + gameDim.getWidth() * .31458333 + 20), (int)(gameDim.getY() + gameDim.getHeight() * 0.03981481), 100, (int)(gameDim.getHeight() * 0.03981481));
+		labels[2].setText("" + (int)((double)player.getMana() / player.getMaxMana() * 100) + "%");
+		labels[2].setBounds((int)(gameDim.getX() + gameDim.getWidth() * .31458333 + 20), (int)(gameDim.getY() + gameDim.getHeight() * 0.08981482), 100, (int)(gameDim.getHeight() * 0.03981481));
+		labels[3].setText("" + player.getSword().getName());
+		labels[3].setBounds((int)(gameDim.getX() + gameDim.getWidth() * .03472222), (int)(gameDim.getY() + gameDim.getHeight() * 0.86666666), (int)(gameDim.getWidth() * 0.15277777), (int)(gameDim.getHeight() * 0.03703703));
+		labels[4].setText("" + player.getEquippedPotionName() + " Potion");
+		labels[4].setBounds((int)(gameDim.getX() + gameDim.getWidth() * .03472222), (int)(gameDim.getY() + gameDim.getHeight() * 0.93981481), (int)(gameDim.getWidth() * 0.15277777), (int)(gameDim.getHeight() * 0.03703703));
+		labels[5].setText("Locked");
+		if(true)
+			labels[5].setText("Fire Lobber");
+		labels[5].setBounds((int)(gameDim.getX() + gameDim.getWidth() * .26180555), (int)(gameDim.getY() + gameDim.getHeight() * 0.87407407), (int)(gameDim.getWidth() * 0.11111111), (int)(gameDim.getHeight() * 0.01851851));
+		labels[6].setText("Locked");
+		if(true)
+			labels[6].setText("Lightning Strike");
+		labels[6].setBounds((int)(gameDim.getX() + gameDim.getWidth() * .26180555), (int)(gameDim.getY() + gameDim.getHeight() * 0.90925925), (int)(gameDim.getWidth() * 0.11111111), (int)(gameDim.getHeight() * 0.01851851));
+		labels[7].setText("Locked");
+		if(true)
+			labels[7].setText("\"Magic\" Powder");
+		labels[7].setBounds((int)(gameDim.getX() + gameDim.getWidth() * .26180555), (int)(gameDim.getY() + gameDim.getHeight() * 0.94259259), (int)(gameDim.getWidth() * 0.11111111), (int)(gameDim.getHeight() * 0.01851851));
+		labels[8].setText("locked");
+		if(true)
+			labels[8].setText("Armor Plated Armor");
+		labels[8].setBounds((int)(gameDim.getX() + gameDim.getWidth() * .40138888), (int)(gameDim.getY() + gameDim.getHeight() * 0.87407407), (int)(gameDim.getWidth() * 0.22222222), (int)(gameDim.getHeight() * 0.01851851));
+		labels[9].setText("Locked");
+		if(true)
+			labels[9].setText("Enchanted Steel");
+		labels[9].setBounds((int)(gameDim.getX() + gameDim.getWidth() * .40138888), (int)(gameDim.getY() + gameDim.getHeight() * 0.90925925), (int)(gameDim.getWidth() * 0.11111111), (int)(gameDim.getHeight() * 0.01851851));
+		labels[10].setText("Locked");
+		if(true)
+			labels[10].setText("Mind Control");
+		labels[10].setBounds((int)(gameDim.getX() + gameDim.getWidth() * .40138888), (int)(gameDim.getY() + gameDim.getHeight() * 0.94259259), (int)(gameDim.getWidth() * 0.11111111), (int)(gameDim.getHeight() * 0.01851851));
 	}
 	
 	private void addJComp(Container c) {
