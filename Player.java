@@ -89,24 +89,31 @@ public class Player extends Character
     {      
          if(e.getKeyCode() == KeyEvent.VK_W)
          {
-             System.out.println("tyes:");
+        	 setDirection(1);
              setLocation(new Point((int)getLocation().getX(),(int)getLocation().getY() - getSpeed())); 
              super.hitWall();
          }
          else if(e.getKeyCode() == KeyEvent.VK_A)
          {
+        	 setDirection(4);
              setLocation(new Point((int)getLocation().getX() - getSpeed(),(int)getLocation().getY())); 
              super.hitWall();
          }
          else if(e.getKeyCode() == KeyEvent.VK_D)
          {
+        	 setDirection(2);
              setLocation(new Point((int)getLocation().getX() + getSpeed(),(int)getLocation().getY())); 
              super.hitWall();
          }
          else if(e.getKeyCode() == KeyEvent.VK_S)
          {
+        	 setDirection(3);
              setLocation(new Point((int)getLocation().getX(),(int)getLocation().getY() + getSpeed())); 
              super.hitWall();
+         }
+         else if(e.getKeyCode() == KeyEvent.VK_Q)
+         {
+             getEquippedPotion().use(this);
          }
          
     }
