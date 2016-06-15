@@ -8,13 +8,15 @@ import java.awt.*;
 public class Doorway extends Obstacle
 {
     //fields    
-    private int roomSendingToIndex;    
+    private int roomSendingToIndex;
+    private boolean enabled;
     
     //constructor
     public Doorway(int sendingToIndex)
     {
      super(new Rectangle(100,100), "Doorway disabled.gif");
      roomSendingToIndex = sendingToIndex;
+     enabled = false
     }
     
     //methods    
