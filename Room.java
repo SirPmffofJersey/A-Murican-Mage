@@ -116,6 +116,9 @@ public class Room
     //methods
     public Obstacle getObstacle(int index)
     {return objects[index];}
+    
+    public int getNumberOfObstacles()
+    {return objects.length;}
             
     public Point getEnteredDoorLocation(Rectangle ricky) //purpose: so as to find out where to place the player
     {return ricky.getLocation();}
