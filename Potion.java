@@ -1,6 +1,6 @@
 package Item;
 
-public class Potion {
+public class Potion implments Dropable{
   private boolean equipped;
   private int type;
   private final FILL_VALUE = 50;
