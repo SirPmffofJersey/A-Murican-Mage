@@ -3,7 +3,7 @@ package Item;
 import java.awt.Image;
 import java.awt.Rectangle;
 
-public class Sword implements Dropable{
+public class Sword {
 	private Rectangle dim;
 	private String image;
 	private boolean equipped;
