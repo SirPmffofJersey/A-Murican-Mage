@@ -5,35 +5,31 @@
  * @author (your name) 
  * @version (a version number or a date)
  */
-public class Map
-{
+public class Map {
    //fields
    private Room[] map;
-   private int currentRoomIndex;
+   private int playerRoomLoc;
    
    //constructor
-    public Map()
+   public Map()
    {
-    map = new Room[]{new Room(0), new Room(1), new Room(2), new Room(3),
-                     new Room(4), new Room(5), new Room(6), new Room(7),
-                     new Room(8), new Room(9)};
-    currentRoomIndex = 0;                 
+    map = new Room[10];
+    for(int i = 0; i < map.length; i++)
+    	map[i] = new Room(i);
    }
    
    //methods
    public Room getRoom(int roomIndex)
    {return map[roomIndex];}
    
-   public Room getCurrentRoom()
-   {
-    return map[getCurrentRoomIndex()];
+   public int getPlayerRoomLoc()
+   {return playerRoomLoc;}
+   
+   public Room getCurrentRoom() {
+	   return map[playerRoomLoc];
    }
-   
-    public int getCurrentRoomIndex()
-   {return currentRoomIndex;}
-   
-   public void setCurrentRoom(int index)
-   {
-    currentRoomIndex = index;
+
+   public void setCurrentRoom(int roomSendingToIndex) {
+		playerRoomLoc = roomSendingToIndex;
    }
 }
