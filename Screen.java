@@ -36,14 +36,14 @@ public class Screen extends JPanel implements MouseListener{
 			
 			public void keyPressed(KeyEvent a)
 			{
-				System.out.println("What what");
 				if(a.getKeyCode() == KeyEvent.VK_ESCAPE) {
-					//if(Game.getGameState())
-						System.out.println("Hit Dat Button D0");
+					if(Game.getGameState())
 						setMenu("Pause");
 				} else if(a.getKeyCode() == KeyEvent.VK_I) {
-					//if(Game.getGameState())
+					if(Game.getGameState())
 						setMenu("Inventory");
+				} else {
+					Game.getPlayer().move(a);
 				}
 			}
 		});
@@ -57,6 +57,8 @@ public class Screen extends JPanel implements MouseListener{
         
         game = new GameGraphics();
         addMouseListener(this);
+        
+        this.setDoubleBuffered(true);
     }
 	
 	public JFrame getFrame() {
@@ -72,7 +74,7 @@ public class Screen extends JPanel implements MouseListener{
 			menu.paintComponent(g);
 		}
 		if(Game.getGameState()) {
-			System.out.println("Painting Game");
+			//System.out.println("Painting Game");
 			game.paintComponent(g);
 		}
 	}
@@ -112,7 +114,7 @@ public class Screen extends JPanel implements MouseListener{
 		// TODO Auto-generated method stub
 		System.out.println(e.getX());
 		System.out.println(e.getY());
-		//Hi doug 
+		Game.getPlayer().attack(e);
 	}
 
 	@Override
