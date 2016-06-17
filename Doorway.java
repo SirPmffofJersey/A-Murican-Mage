@@ -1,4 +1,7 @@
-import java.awt.*;
+import java.awt.Point;
+import java.awt.Rectangle;
+
+import Main.Game;
 /**
  * Write a description of class Doorway here.
  * 
@@ -14,19 +17,33 @@ public class Doorway extends Obstacle
     //constructor
     public Doorway(int sendingToIndex)
     {
-     super(new Rectangle(100,100), "Doorway disabled.gif");
+     super(new Rectangle(100,100), "Doorway disabled");
      roomSendingToIndex = sendingToIndex;
-     enabled = false
+     enabled = false;
     }
     
     //methods    
     public int getRoomSendingToIndex()
     {return roomSendingToIndex;}
-       
+    
+    public boolean getEnabled() 
+    {return enabled;}
+    
+    public void setEnabled(boolean e)
+    {
+    	if(e)
+    		setImage("Doorway enabled");
+    	else
+    		setImage("Doorway disabled");
+    	enabled = e;
+    }
 
     public void travel()
     {
+     Game.generateEnemies();
      Game.getMap().setCurrentRoom(roomSendingToIndex);
+     System.out.println("Forcing the player to move");
+     Game.getPlayer().forceTo(new Point(100, 100));
     }
 
 }
