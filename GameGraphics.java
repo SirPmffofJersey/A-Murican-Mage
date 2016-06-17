@@ -22,6 +22,8 @@ import Charactor.Enemies;
 import Charactor.Player;
 import Main.Game;
 import Main.Media;
+import Map.Doorway;
+import Map.Obstacle;
 import Map.Room;
 
 public class GameGraphics extends JPanel implements KeyListener{
@@ -106,12 +108,23 @@ public class GameGraphics extends JPanel implements KeyListener{
 			centiunitToPixel = (w * scale2) / (room.getDim().getWidth() + 200);
 		} else {
 			g2.drawImage(image, (int)roomDisDim.getX(), (int)(Math.abs((h * scale1) - roomDisDim.getHeight()) / 2 + roomDisDim.getY()), (int)roomDisDim.getWidth(), (int)(h * scale1), this);
+			innerRoom = new Point((int)(roomDisDim.getX()  + (roomDisDim.getWidth() * (100/(room.getDim().getWidth() + 200)))), (int)((Math.abs((h * scale1) - roomDisDim.getHeight()) / 2 + roomDisDim.getY()) + ((h * scale1) * (100/(room.getDim().getHeight() + 200)))));
+			centiunitToPixel = (h * scale1) / (room.getDim().getHeight() + 200);
 		}
+		for(int i = 0; i < Game.getMap().getCurrentRoom().getNumberOfObstacles(); i++)
+			drawObstacle(Game.getMap().getCurrentRoom().getObstacle(i), g2);
 		//g2.drawRect((int)roomDim.getX(), (int)roomDim.getY(), (int)roomDim.getWidth(), (int)roomDim.getHeight());
+	}
+	
+	private void drawObstacle(Obstacle o, Graphics2D g2) {
+		g2.drawImage(o.getImage(), (int)(innerRoom.getX() + (o.getDimensions().getX() * centiunitToPixel)), (int)(innerRoom.getY() + (o.getDimensions().getY() * centiunitToPixel)), (int)(o.getDimensions().getWidth() * centiunitToPixel), (int)(o.getDimensions().getHeight() * centiunitToPixel), this);
+		//g2.drawRect((int)(innerRoom.getX() + (o.getDimensions().getX() * centiunitToPixel)), (int)(innerRoom.getY() + (o.getDimensions().getY() * centiunitToPixel)), (int)(o.getDimensions().getWidth() * centiunitToPixel), (int)(o.getDimensions().getHeight() * centiunitToPixel));
 	}
 	
 	private void drawCharacters(Graphics2D g2) {
 		drawCharacter(player, g2);
+		if(player.getAttackCount() > 0)
+			g2.drawRect((int)(innerRoom.getX() + player.getSword().getDim().getX() * centiunitToPixel), (int)(innerRoom.getY() + player.getSword().getDim().getY() * centiunitToPixel), (int)(player.getSword().getDim().getWidth() * centiunitToPixel), (int)(player.getSword().getDim().getHeight() * centiunitToPixel));
 		ArrayList<Enemies> e = Game.getEnemies();
 		for(int i = 0; i < e.size(); i++) {
 			drawCharacter(e.get(i), g2);
@@ -120,7 +133,7 @@ public class GameGraphics extends JPanel implements KeyListener{
 	
 	private void drawCharacter(Charactor.Character c, Graphics2D g2) {
 		Image image = c.getImage();
-		g2.drawImage(image, (int)(innerRoom.getX() + (c.getLocation().getX() * centiunitToPixel)), (int)(innerRoom.getY() + (c.getLocation().getY() * centiunitToPixel)), (int)(c.getDimensions().getWidth() * centiunitToPixel), (int)(c.getDimensions().getHeight() * centiunitToPixel), this);
+		g2.drawImage(image, (int)(innerRoom.getX() + (c.getDimensions().getX() * centiunitToPixel)), (int)(innerRoom.getY() + (c.getDimensions().getY() * centiunitToPixel)), (int)(c.getDimensions().getWidth() * centiunitToPixel), (int)(c.getDimensions().getHeight() * centiunitToPixel), this);
 	}
 	
 	private void drawProjectiles(Graphics2D g2) {
@@ -163,7 +176,7 @@ public class GameGraphics extends JPanel implements KeyListener{
 		labels[3].setForeground(Color.BLACK);
 		//
 		labels[4] = new JLabel("Selected Consumable");
-		labels[4].setText("" + player.getEquippedPotionName() + " Potion");
+		labels[4].setText("" + player.getEquippedPotionName() + " Potion  " + "(" + player.getEquippedPotion().getQuantity() + ")");
 		labels[4].setBounds((int)(gameDim.getX() + gameDim.getWidth() * .03472222), (int)(gameDim.getY() + gameDim.getHeight() * 0.93981481), (int)(gameDim.getWidth() * 0.15277777), (int)(gameDim.getHeight() * 0.03703703));
 		labels[4].setHorizontalAlignment(SwingConstants.LEFT);
 		labels[4].setVerticalAlignment(SwingConstants.CENTER);
@@ -240,7 +253,7 @@ public class GameGraphics extends JPanel implements KeyListener{
 		labels[2].setBounds((int)(gameDim.getX() + gameDim.getWidth() * .31458333 + 20), (int)(gameDim.getY() + gameDim.getHeight() * 0.08981482), 100, (int)(gameDim.getHeight() * 0.03981481));
 		labels[3].setText("" + player.getSword().getName());
 		labels[3].setBounds((int)(gameDim.getX() + gameDim.getWidth() * .03472222), (int)(gameDim.getY() + gameDim.getHeight() * 0.86666666), (int)(gameDim.getWidth() * 0.15277777), (int)(gameDim.getHeight() * 0.03703703));
-		labels[4].setText("" + player.getEquippedPotionName() + " Potion");
+		labels[4].setText("" + player.getEquippedPotionName() + " Potion  " + "(" + player.getEquippedPotion().getQuantity() + ")");
 		labels[4].setBounds((int)(gameDim.getX() + gameDim.getWidth() * .03472222), (int)(gameDim.getY() + gameDim.getHeight() * 0.93981481), (int)(gameDim.getWidth() * 0.15277777), (int)(gameDim.getHeight() * 0.03703703));
 		labels[5].setText("Locked");
 		if(true)
