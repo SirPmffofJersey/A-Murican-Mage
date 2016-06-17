@@ -1,5 +1,7 @@
 import java.awt.*;
 
+import javax.swing.ImageIcon;
+
 /**
  * description: anything in a room's environment that isn't a character. This includes
  * walls, pillars(walls in the middle of a room), and doorways. 
@@ -10,19 +12,19 @@ import java.awt.*;
 public class Obstacle
 {
   private Rectangle dimensions;
-  private String imageName;
+  private Image image;
   
   public Obstacle(Rectangle dim, String imgName)
   {
    dimensions = new Rectangle(dim);
-   imageName = new String(imgName);
+   image = new ImageIcon(getClass().getResource("/" + imgName + ".gif")).getImage();
   }
   
   public boolean isColliding(Rectangle dim)
   {return dimensions.contains(dim) || dimensions.intersects(dim);}
   
-  public String getImageName()
-  {return imageName;}
+  public Image getImage()
+  {return image;}
   
   public Rectangle getDimensions()
   {return dimensions;}
@@ -36,6 +38,6 @@ public class Obstacle
   {return dimensions.getLocation();}
   
   public void setImage(String name)
-  {imageName=name;}
+  {image=new ImageIcon(getClass().getResource("/" + name + ".gif")).getImage();}
   
 }
