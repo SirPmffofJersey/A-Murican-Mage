@@ -1,36 +1,34 @@
-import java.util.Timer;
-import java.util.TimerTask;
-import java.awt.Color;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
+
+import Item.Sword;
 /**
  * Write a description of class Enemies here.
  * 
  * @author (your name) 
  * @version (a version number or a date)
  */
-public class Enemy extends Character
+public class Enemies extends Character
 {
     private boolean attacked = false; 
     private int facing = 1; 
 
-    public Enemy(String name, int hp, int mp, int maxHp, int maxMp,int atk, int def, int spd, int lvl, Point loc, Rectangle dim, Item e,int direct)
+    public Enemies(String name, int hp, int mp, int maxHp, int maxMp,int atk, int def, int spd, int lvl, Rectangle dim, Sword s,int direct)
     {
-        super(name,hp,mp,maxHp,maxMp,atk,def,spd,lvl,loc,dim,e,direct);
+        super(name,hp,mp,maxHp,maxMp,atk,def,spd,lvl,dim,s,direct);
     }
     
     public void dontMove()
     {
-        super.setLocation((int)super.getLocation().getX() ,(int)super.getLocation().getY() ); 
+        super.setLocation(new Point((int)super.getDimensions().getX() ,(int)super.getDimensions().getY())); 
         super.hitWall(); 
     } 
     
     public void draw(Graphics g) 
     {
         if(super.getHealth() > 0)
-            g.fillOval((int)super.getLocation().getX(),(int)super.getLocation().getY(),50,50); 
+            g.fillOval((int)super.getDimensions().getX(),(int)super.getDimensions().getY(),50,50); 
             
         /*if(attacked)
         {
@@ -45,8 +43,8 @@ public class Enemy extends Character
         } */
     }
     
-    public Item dropLoot()
+    public String dropLoot()
     {
-        return new Item(); 
+        return "Health Potion"; 
     }
 }
