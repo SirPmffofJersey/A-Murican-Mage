@@ -27,8 +27,8 @@ import Map.Map;
  * the other main aspects of the program
  * 
  * @author Will Roberts
- * @version (How many times was this worked on?)
- * @since (When was this added)
+ * @version 4
+ * @since 6/10/16
  */
 public class Game implements ActionListener{
     private static boolean inGame;
@@ -44,10 +44,6 @@ public class Game implements ActionListener{
  
     
     
-    public static void main(String[] args){
-    	game = new Game();
-    }
-    
     public Game() {
     	player = new Player();
         screen = new Screen();
@@ -59,30 +55,6 @@ public class Game implements ActionListener{
         timer.start();
     }
     
-    public static Screen getScreen() {
-    	return screen;
-    }
-    
-    public static void restartGame() {
-    	timer.stop();
-    	game = new Game();
-    }
-    
-    public static Game getGame() {return game;}
-
-    public static void enterGame() {
-        inGame = true;
-        
-    }
-  
-    public static void exitGame() {
-        inGame = false;
-    }
-
-    public static boolean getGameState() {
-        return inGame;
-    }
-
     public void actionPerformed(ActionEvent a) {
         screen.repaint();
         if(inGame) {
@@ -123,24 +95,57 @@ public class Game implements ActionListener{
         }
     }
     
+
     public static void addProjectile(Projectile p) {
     	projectiles.add(p);
     }
 
-    public static Map getMap() {
-        return map;
+    public static void enterGame() {
+        inGame = true;
+    }
+  
+    public static void exitGame() {
+        inGame = false;
     }
 
-    public static Player getPlayer() {
-        return player;
-    }
+    public static Rectangle getBackgroundDim(Image i, ImageObserver io) {
+		Rectangle r = Screen.getFrameDim();
+		Rectangle temp = null;
+		int w = i.getWidth(io);
+		int h = i.getHeight(io);
+		double scale1 = r.getWidth()/w, scale2 = r.getHeight()/h;
+		if(scale1 > scale2) {
+			temp = new Rectangle(0, (int)Math.abs((h * scale1) - r.getHeight()) / 2 * -1, (int)r.getWidth(), (int)(h * scale1));
+		} else {
+			temp = new Rectangle((int)Math.abs((w * scale2) - r.getWidth()) / 2 * -1, 0, (int)(w * scale2), (int)r.getHeight());
+		}
+		return temp;
+	}
     
     public static ArrayList<Enemies> getEnemies() {
     	return enemies;
     }
     
+    public static Game getGame() {return game;}
+    
+    public static boolean getGameState() {
+        return inGame;
+    }
+    
+     public static Map getMap() {
+        return map;
+    }
+   
+    public static Player getPlayer() {
+        return player;
+    }
+
     public static ArrayList<Projectile> getProjectiles() {
     	return projectiles;
+    }
+    
+    public static Screen getScreen() {
+    	return screen;
     }
     
     public static void generateEnemies() {generateEnemies = true;}
@@ -229,17 +234,9 @@ public class Game implements ActionListener{
         }
     }
     
-    public static Rectangle getBackgroundDim(Image i, ImageObserver io) {
-		Rectangle r = Screen.getFrameDim();
-		Rectangle temp = null;
-		int w = i.getWidth(io);
-		int h = i.getHeight(io);
-		double scale1 = r.getWidth()/w, scale2 = r.getHeight()/h;
-		if(scale1 > scale2) {
-			temp = new Rectangle(0, (int)Math.abs((h * scale1) - r.getHeight()) / 2 * -1, (int)r.getWidth(), (int)(h * scale1));
-		} else {
-			temp = new Rectangle((int)Math.abs((w * scale2) - r.getWidth()) / 2 * -1, 0, (int)(w * scale2), (int)r.getHeight());
-		}
-		return temp;
-	}
+	
+    public static void restartGame() {
+    	timer.stop();
+    	game = new Game();
+    }
 }
