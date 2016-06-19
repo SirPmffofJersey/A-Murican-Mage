@@ -11,6 +11,16 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.Point;
 import java.awt.Rectangle;
+
+/**
+ * RiotOfficer Class:
+ * The RiotOfficer class is a specific type of enemy that the only special
+ * thing about it, is that they take half damage.
+ * 
+ * @author Jimmy Greaves
+ * @version 3.14 6/15/16
+ */
+
 public class RiotOfficer extends Enemies 
 {
 
