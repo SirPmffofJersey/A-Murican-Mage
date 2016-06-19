@@ -12,7 +12,6 @@ import Item.Sword;
 public class Enemies extends Character
 {
     private boolean attacked = false; 
-    private int facing = 1; 
 
     public Enemies(String name, int hp, int mp, int maxHp, int maxMp,int atk, int def, int spd, int lvl, Rectangle dim, Sword s,int direct)
     {
@@ -45,6 +44,15 @@ public class Enemies extends Character
     
     public String dropLoot()
     {
-        return "Health Potion"; 
+    	int r = (int)(Math.random() * 100);
+    	if(r < 20)
+    		return "Nothing";
+    	else if(r < 60)
+    		return "Health Potion";
+    	else if(r < 90)
+    		return "Mana Potion";
+    	else if(r == 100)
+    		return "Katana";
+        return "Nothing"; 
     }
 }
