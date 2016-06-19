@@ -1,15 +1,20 @@
 package Main;
 
-import java.awt.Point;
+import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.ImageObserver;
 import java.util.ArrayList;
 
 import javax.swing.Timer;
 
+import Charactor.Crunch;
+import Charactor.Cultists;
+import Charactor.Dump;
 import Charactor.Enemies;
 import Charactor.Player;
+import Charactor.RiotOfficer;
 import Graphics.Screen;
 import Item.Projectile;
 import Item.Sword;
@@ -31,21 +36,35 @@ public class Game implements ActionListener{
     
     public static void main(String[] args){
     	game = new Game();
+    }
+    
+    public Game() {
     	player = new Player();
         screen = new Screen();
-        timer = new Timer(100, game);
+        timer = new Timer(100, this);
         map = new Map();
         enemies = new ArrayList<Enemies>();
         projectiles = new ArrayList<Projectile>(0);
         generateEnemies = true;
         timer.start();
     }
+    
+    public static Screen getScreen() {
+    	return screen;
+    }
+    
+    public static void restartGame() {
+    	timer.stop();
+    	game = new Game();
+    }
+    
+    public static Game getGame() {return game;}
 
     public static void enterGame() {
         inGame = true;
         
     }
-
+  
     public static void exitGame() {
         inGame = false;
     }
@@ -56,13 +75,16 @@ public class Game implements ActionListener{
 
     public void actionPerformed(ActionEvent a) {
         screen.repaint();
-        if(inGame == true) {
+        if(inGame) {
         	if(player.getHealth() <= 0)
-        		System.exit(0);
+        		screen.setMenu("Death");
+        	player.regenerate();
         	if(player.getAttackCount() > 0)
         		player.decrementAttackCount();
         	else if(player.getAttackCount() == 0)
         		player.stopAttack();
+        	if(player.getEquippedSpell() != null && player.getEquippedSpell().getCoolDown() > 0)
+        		player.getEquippedSpell().coolDown();
         	if(generateEnemies)
         		generateEnemies(map.getPlayerRoomLoc());
         	if(enemies != null)
@@ -70,9 +92,12 @@ public class Game implements ActionListener{
         			if(enemies.get(i).isDead()) {
         				enemies.remove(enemies.get(i));
         				i--;
-        			} else
+        			} else {
         				enemies.get(i).moveTowardPlayer(player);
+        				if(enemies.get(i).canAttack(player))
+        					enemies.get(i).attack(player);
         				//enemies.get(i).move();
+        			}
         		}
         	
         	for(int i = 0; i < projectiles.size(); i++){
@@ -87,6 +112,10 @@ public class Game implements ActionListener{
         	}
         }
     }
+    
+    public static void addProjectile(Projectile p) {
+    	projectiles.add(p);
+    }
 
     public static Map getMap() {
         return map;
@@ -100,16 +129,107 @@ public class Game implements ActionListener{
     	return enemies;
     }
     
+    public static ArrayList<Projectile> getProjectiles() {
+    	return projectiles;
+    }
+    
     public static void generateEnemies() {generateEnemies = true;}
     
     private static void generateEnemies(int room){
     	generateEnemies = false;
-        if(room == 0 || room == 2 || room == 4 || room == 8){
-            enemyAmount = 4;
-            for(int i =0; i < enemyAmount; i++){
-                enemies.add(new Enemies("Police officer", 50, 0, 50, 0, 20, 20, 2, 1, new Rectangle((int)(Math.random()* 340 + 100), (int)(Math.random()* 340 + 100), 100, 100), new Sword("Dagger"), 1));
+        if(room == 2 || room == 4){
+            enemyAmount = 3;
+            switch(room){
+            
+            case 2:
+            	for(int i =0; i < enemyAmount; i++){
+                    enemies.add(new Enemies("Police officer", 50, 50, 50, 50, 5, 20, 2, 1, new Rectangle((int)(Math.random()* 400 + 100), (int)(Math.random()* 400 + 100), 100, 100), new Sword(""), 1));
+                }
+            	break;
+            case 4:
+            	for(int i =0; i < enemyAmount; i++){
+                    enemies.add(new Enemies("Dog", 30, 30, 30, 30, 15, 5, 3, 1, new Rectangle((int)(Math.random() * 400 + 100), (int)(Math.random() * 400 + 100), 100, 100), new Sword(""), 1));
+                }
+            	break;
             }
         }
         
+        if(room == 1 || room == 6){
+            enemyAmount = 5;
+            switch(room){
+            
+            case 1:
+            	for(int i =0; i < enemyAmount; i++){
+                    enemies.add(new Enemies("Police officer", 50, 50, 50, 50, 5, 20, 2, 1, new Rectangle((int)(Math.random()* 1200 + 100), (int)(Math.random()* 200 + 100), 100, 100), new Sword(""), 1));
+                }
+            	break;
+            case 6:
+            	for(int i =0; i < enemyAmount; i++){
+                    enemies.add(new Enemies("Secret Service", 50, 50, 50, 50, 8, 25, 2, 1, new Rectangle((int)(Math.random()* 1200 + 100), (int)(Math.random()* 200 + 100), 100, 100), new Sword(""), 1));
+                }
+            	break;
+            }
+        }
+        
+        if(room == 3 || room == 7 || room == 8){
+            switch(room){
+            
+            case 3:
+            	enemyAmount = 3;
+            	for(int i =0; i < enemyAmount; i++){
+                    enemies.add(new Enemies("Police officer", 50, 50, 50, 50, 5, 20, 2, 1, new Rectangle((int)(Math.random()* 700 + 100), (int)(Math.random()* 700 + 100), 100, 100), new Sword(""), 1));
+                }
+            	enemyAmount = 2;
+            	for(int i =0; i < enemyAmount; i++){
+                    enemies.add(new RiotOfficer("Riot Officer", 60, 60, 60, 60, 5, 25, 1, 1, new Rectangle((int)(Math.random()* 700 + 100), (int)(Math.random()* 700 + 100), 100, 100), new Sword(""), 1));
+                }
+            	break;
+            case 7:
+            	enemyAmount = 3;
+            	for(int i =0; i < enemyAmount; i++){
+            		enemies.add(new Enemies("Secret Service", 50, 50, 50, 50, 8, 25, 2, 1, new Rectangle((int)(Math.random()* 700 + 100), (int)(Math.random()* 700 + 100), 100, 100), new Sword(""), 1));
+                }
+            	enemyAmount = 2;
+            	for(int i =0; i < enemyAmount; i++){
+                    enemies.add(new RiotOfficer("Riot Officer", 60, 60, 60, 60, 5, 25, 1, 1, new Rectangle((int)(Math.random()* 700 + 100), (int)(Math.random()* 700 + 100), 100, 100), new Sword(""), 1));
+                }
+            	break;
+            case 8:
+            	enemyAmount = 3;
+            	for(int i =0; i < enemyAmount; i++){
+            		enemies.add(new Enemies("Dog", 30, 30, 30, 30, 15, 5, 3, 1, new Rectangle((int)(Math.random()* 700 + 100), (int)(Math.random()* 700 + 100), 100, 100), new Sword(""), 1));
+                }
+            	enemyAmount = 3;
+            	for(int i =0; i < enemyAmount; i++){
+                    enemies.add(new Cultists("Cultist", 10, 10, 10, 10, 0, 25, 2, 1, new Rectangle((int)(Math.random()* 700 + 100), (int)(Math.random()* 700 + 100), 100, 100), new Sword(""), 1));
+                }
+            	break;
+            }
+        }
+        
+        if(room == 5){
+        	Crunch c = new Crunch("Captain Crunchstie", 100, 100, 100, 100, 20, 25, 1, 1, new Rectangle(1200, 400, 200, 200), new Sword(""), 1);
+        	enemies.add(c);
+        	c.spawnEnemies(enemies, c);
+        }
+        if(room == 9) {
+        	Dump d = new Dump("TronaldDump", 150, 150, 150, 150, 30, 30, 1, 1, new Rectangle(600, 200, 300, 300), new Sword(""), 1);
+        	enemies.add(d);
+        	d.spawnEnemies(enemies, d);
+        }
     }
+    
+    public static Rectangle getBackgroundDim(Image i, ImageObserver io) {
+		Rectangle r = Screen.getFrameDim();
+		Rectangle temp = null;
+		int w = i.getWidth(io);
+		int h = i.getHeight(io);
+		double scale1 = r.getWidth()/w, scale2 = r.getHeight()/h;
+		if(scale1 > scale2) {
+			temp = new Rectangle(0, (int)Math.abs((h * scale1) - r.getHeight()) / 2 * -1, (int)r.getWidth(), (int)(h * scale1));
+		} else {
+			temp = new Rectangle((int)Math.abs((w * scale2) - r.getWidth()) / 2 * -1, 0, (int)(w * scale2), (int)r.getHeight());
+		}
+		return temp;
+	}
 }
