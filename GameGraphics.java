@@ -20,9 +20,8 @@ import javax.swing.SwingConstants;
 
 import Charactor.Enemies;
 import Charactor.Player;
+import Item.Projectile;
 import Main.Game;
-import Main.Media;
-import Map.Doorway;
 import Map.Obstacle;
 import Map.Room;
 
@@ -41,11 +40,13 @@ public class GameGraphics extends JPanel implements KeyListener{
 	private double centiunitToPixel;
 	private Player player;
 	private JLabel[] labels;
+	private ArrayList<String> strings;
+	private int stringCount;
 	
 	public GameGraphics() {
 		gameInterface = new ImageIcon(getClass().getResource("/PlayerInterfaceV1.png")).getImage();
 		//gameInterface = Media.changeWhiteToTransparent(Media.toBufferedImage(gameInterface));
-		background = new Media("city1", "image").getImage();
+		background = new ImageIcon(getClass().getResource("/city1.png")).getImage();
 		player = Game.getPlayer();
 		Rectangle r = Screen.getFrameDim();
 		int w = GAMEPLAY_SCREEN_WIDTH;
@@ -56,9 +57,11 @@ public class GameGraphics extends JPanel implements KeyListener{
 		} else {
 			gameDim = new Rectangle(0, (int)Math.abs((h * scale1) - r.getHeight()) / 2, (int)r.getWidth(), (int)(h * scale1));
 		}
-		backgroundDim = Media.getBackgroundDim(background, this);
+		backgroundDim = Game.getBackgroundDim(background, this);
 		roomDisDim = new Rectangle((int)(gameDim.getX() + gameDim.getWidth() * 0.00694444), (int)(gameDim.getY() + gameDim.getHeight() * 0.01851851), (int)(gameDim.getWidth() * 0.98611111), (int)(gameDim.getHeight() * 0.76851851));
-		//setJComp();
+		strings = new ArrayList<String>(10);
+		strings.add("You started a Game");
+		stringCount = 2000;
 	}
 	
 	public void paintComponent(Graphics g) {
@@ -123,8 +126,9 @@ public class GameGraphics extends JPanel implements KeyListener{
 	
 	private void drawCharacters(Graphics2D g2) {
 		drawCharacter(player, g2);
-		if(player.getAttackCount() > 0)
-			g2.drawRect((int)(innerRoom.getX() + player.getSword().getDim().getX() * centiunitToPixel), (int)(innerRoom.getY() + player.getSword().getDim().getY() * centiunitToPixel), (int)(player.getSword().getDim().getWidth() * centiunitToPixel), (int)(player.getSword().getDim().getHeight() * centiunitToPixel));
+		if(player.getAttackCount() > 0){
+			g2.drawImage(player.getSword().getImage(), (int)(innerRoom.getX() + player.getSword().getDim().getX() * centiunitToPixel), (int)(innerRoom.getY() + player.getSword().getDim().getY() * centiunitToPixel), (int)(player.getSword().getDim().getWidth() * centiunitToPixel), (int)(player.getSword().getDim().getHeight() * centiunitToPixel), this);
+		}
 		ArrayList<Enemies> e = Game.getEnemies();
 		for(int i = 0; i < e.size(); i++) {
 			drawCharacter(e.get(i), g2);
@@ -137,11 +141,18 @@ public class GameGraphics extends JPanel implements KeyListener{
 	}
 	
 	private void drawProjectiles(Graphics2D g2) {
-		
+		ArrayList<Projectile> p = Game.getProjectiles();
+		for(int i = 0; i < p.size(); i++) {
+			drawProjectile(p.get(i), g2);
+		}
+	}
+	
+	private void drawProjectile(Projectile p, Graphics2D g2) {
+		g2.drawImage(p.getImage(), (int)(innerRoom.getX() + (p.getDim().getX() * centiunitToPixel)), (int)(innerRoom.getY() + (p.getDim().getY() * centiunitToPixel)), (int)(p.getDim().getWidth() * centiunitToPixel), (int)(p.getDim().getHeight() * centiunitToPixel), this);
 	}
 	
 	private void setJComp() {
-		labels = new JLabel[11];
+		labels = new JLabel[12];
 		//
 		labels[0] = new JLabel("Level");
 		labels[0].setText("" + player.getLevel());
@@ -242,6 +253,15 @@ public class GameGraphics extends JPanel implements KeyListener{
 		labels[10].setVerticalAlignment(SwingConstants.CENTER);
 		labels[10].setFont(new Font("Arial", Font.PLAIN, 20));
 		labels[10].setForeground(Color.BLACK);
+		//
+		labels[11] = new JLabel("Strings");
+		if(!strings.isEmpty())
+			labels[11].setText(strings.get(0));
+		labels[11].setBounds((int)(gameDim.getX() + gameDim.getWidth() * .38680555), (int)(gameDim.getY() + gameDim.getHeight() * 0.03981481), (int)(gameDim.getWidth() * 0.60000000), (int)(gameDim.getHeight() * 0.12592592));
+		labels[11].setHorizontalAlignment(SwingConstants.LEFT);
+		labels[11].setVerticalAlignment(SwingConstants.CENTER);
+		labels[11].setFont(new Font("Joker", Font.PLAIN, 40));
+		labels[11].setForeground(Color.GREEN);
 	}
 	
 	private void updateLabels() {
@@ -279,6 +299,25 @@ public class GameGraphics extends JPanel implements KeyListener{
 		if(true)
 			labels[10].setText("Mind Control");
 		labels[10].setBounds((int)(gameDim.getX() + gameDim.getWidth() * .40138888), (int)(gameDim.getY() + gameDim.getHeight() * 0.94259259), (int)(gameDim.getWidth() * 0.11111111), (int)(gameDim.getHeight() * 0.01851851));
+		if(stringCount > 0) {
+			stringCount--;
+		} else {
+			stringCount = 2000;
+			if(!strings.isEmpty())
+				strings.remove(0);
+		}
+		if(!strings.isEmpty())
+			labels[11].setText(strings.get(0));
+		else
+			labels[11].setText("");
+		labels[11].setBounds((int)(gameDim.getX() + gameDim.getWidth() * .38680555), (int)(gameDim.getY() + gameDim.getHeight() * 0.03981481), (int)(gameDim.getWidth() * 0.34305555), (int)(gameDim.getHeight() * 0.12592592));
+		if(labels[player.getSelectedSpell() + 4].getForeground() != Color.GREEN)
+			labels[5].setForeground(Color.BLACK);
+			labels[6].setForeground(Color.BLACK);
+			labels[7].setForeground(Color.BLACK);
+			labels[8].setForeground(Color.BLACK);
+			labels[9].setForeground(Color.BLACK);
+			labels[player.getSelectedSpell() + 4].setForeground(Color.GREEN);
 	}
 	
 	private void addJComp(Container c) {
@@ -294,23 +333,30 @@ public class GameGraphics extends JPanel implements KeyListener{
 				if(l != null)
 					c.remove(l);
 	}
+	
+	public void addString(String s) {
+		strings.add(s);
+	}
+	
+	public Point mouseToPointConv(Point m) {
+		return new Point((int)(m.getX() - innerRoom.getX() - Game.getPlayer().getDimensions().getCenterX() * centiunitToPixel), (int)(m.getY() - innerRoom.getY() - Game.getPlayer().getDimensions().getCenterY() * centiunitToPixel));
+	}
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		System.out.println("Hit Button");
-		if(e.getKeyCode() == KeyEvent.VK_A) {
-			System.out.println("Hit Button");
-			Screen.setMenu("Pause");
-		}
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
+		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void keyTyped(KeyEvent e) {
+		// TODO Auto-generated method stub
 		
 	}
 }
