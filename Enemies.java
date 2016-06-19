@@ -4,10 +4,14 @@ import java.awt.Rectangle;
 
 import Item.Sword;
 /**
- * Write a description of class Enemies here.
+ * <h1> Enemies Class: </h1>
+ * The Enemies class is the super class that contains 
+ * the basis for all enemies in the game. That includes droping loot,
+ * as well as, knowing when and when not to move.
  * 
- * @author (your name) 
- * @version (a version number or a date)
+ * @author Will Roberts
+ * @version 4
+ * @since 6/6/17
  */
 public class Enemies extends Character
 {
