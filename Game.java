@@ -20,6 +20,16 @@ import Item.Projectile;
 import Item.Sword;
 import Map.Map;
 
+/**
+ * <h1> Game Class: </h1>
+ * The Game class is the main class for the program, 
+ * it holds the main method and static references to
+ * the other main aspects of the program
+ * 
+ * @author Will Roberts
+ * @version (How many times was this worked on?)
+ * @since (When was this added)
+ */
 public class Game implements ActionListener{
     private static boolean inGame;
     private static boolean generateEnemies;
