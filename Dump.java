@@ -1,9 +1,12 @@
 
 /**
- * Write a description of class Dump here.
+ * Dump CLass: 
+ * This is the class for the final boss Tronald Dump, 
+ * it includes the special methods that he uses, like 
+ * the spawn enemies method. 
  * 
- * @author (your name) 
- * @version (a version number or a date)
+ * @author Jimmy Greaves
+ * @version 2.3 6/18/16 
  */
 import java.awt.Rectangle;
 import java.util.ArrayList;
