@@ -24,6 +24,21 @@ public class Crunch extends Bosses
         super(name,hp,mp,maxHp,maxMp,atk,def,spd,lvl,dim,e,direct);
     }
     
+    public String dropLoot() {
+    	return "Saber";
+    }
+    
+    public boolean isDead() {
+		if (getHealth() <= 0) {
+			Game.getPlayer().getLoot((Enemies)this);
+			Game.getPlayer().addExperiance();
+			Game.getScreen().getGameGraphics().addString("You Beat Cap'n Crunchstie");
+			Game.getScreen().getGameGraphics().addString("You unlocked the saber");
+			return true;
+		}
+		return false;
+	}
+    
     public void spawnEnemies(ArrayList<Enemies> e, Character c){
     	final Timer timer = new Timer();
         timer.schedule(new TimerTask(){
@@ -39,20 +54,5 @@ public class Crunch extends Bosses
         }, 2000, 2000);
         
         
-    }  
-    
-    public boolean isDead() {
-		if (getHealth() <= 0) {
-			Game.getPlayer().getLoot((Enemies)this);
-			Game.getPlayer().addExperiance();
-			Game.getScreen().getGameGraphics().addString("You Beat Cap'n Crunchstie");
-			Game.getScreen().getGameGraphics().addString("You unlocked the saber");
-			return true;
-		}
-		return false;
-	}
-    
-    public String dropLoot() {
-    	return "Saber";
     }
 }
