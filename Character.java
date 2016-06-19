@@ -16,10 +16,11 @@ import Map.Room;
 import Spell.Buff;
 
 /**
- * Abstract class Character - write a description of the class here
+ * Character Class - this class is the skeleton for all the enemies and the player, 
+ * it has methods to check all types of collisions, movement and how they attack.
  * 
- * @author (your name here)
- * @version (version number or date here)
+ * @author Jimmy Greaves
+ * @version 5.6 6/18/16
  */
 public class Character {
 	// Basic Character Stats
