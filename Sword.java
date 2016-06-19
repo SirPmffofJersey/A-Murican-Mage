@@ -3,23 +3,47 @@ package Item;
 import java.awt.Image;
 import java.awt.Rectangle;
 
+import javax.swing.ImageIcon;
+
 public class Sword {
 	private Rectangle dim;
-	private String image;
+	private Image image;
+	private String name;
 	private boolean equipped;
 	private int damage;
 	private int range;
 	private int swingSpeed;
+	private final int WIDTH;
 	
-	public Sword(String name) {
+	public Sword(String n) {
+		name = n;
 		if(name.equals("Dagger")) {
 			damage = 10;
-			range = 10;
+			range = 20;
 			swingSpeed = 10;
+			WIDTH = 10;
+			setImage("Dagger", 1);
+		} else if (name.equals("Saber")) {
+			damage = 20;
+			range = 50;
+			swingSpeed = 20;
+			WIDTH = 20;
+			setImage("Saber", 1);
+		} else if (name.equals("Katana")){
+			damage = 15;
+			range = 100;
+			swingSpeed = 15;
+			WIDTH = 20;
+			setImage("Katana", 1);
+		} else {
+			damage = 5;
+			range = 30;
+			swingSpeed = 20;
+			WIDTH = 10;
 		}
 	}
 
-	public String getImage() {
+	public Image getImage() {
 		// TODO Auto-generated method stub
 		return image;
 	}
@@ -29,16 +53,29 @@ public class Sword {
 		return equipped;
 	}
 	
-	public Rectangle geDim() {
+	public Rectangle getDim() {
 		return dim;
 	}
 	
-	public void setImage(String i) {
-		image =  i;
+	public String getName() {
+		return name;
+	}
+	
+	public int getWidth() {
+		return WIDTH;
+	}
+	
+	public void setImage(String i, int d) {
+		image =  new ImageIcon(getClass().getResource("/" + i + d + ".gif")).getImage();
 	}
 	
 	public void setEquipped(Boolean e) {
 		equipped = e;
+	}
+	
+	public void setDim(Rectangle d, int di) {
+		dim = d;
+		setImage(name, di);
 	}
 
 	public int getRange() {
