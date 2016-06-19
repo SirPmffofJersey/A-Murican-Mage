@@ -1,9 +1,12 @@
-
 /**
- * Write a description of class Crunch here.
+ * <h1> Crunch Class: </h1>
+ * The Crunch class is the class that deasl with our mini-boss Captain Crunchstie. 
+ * It holds the Constructor and 
+ * Crunshtie's mini-boss ability to generate Police Officers.
  * 
- * @author (your name) 
- * @version (a version number or a date)
+ * @author Will Roberts
+ * @version 3
+ * @since 6/17/16
  */
 import java.awt.Rectangle;
 import java.util.ArrayList;
