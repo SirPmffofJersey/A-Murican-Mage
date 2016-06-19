@@ -40,10 +40,10 @@ public class Doorway extends Obstacle
 
     public void travel()
     {
-     Game.generateEnemies();
+     Game.getMap().getCurrentRoom().disableDoors();
      Game.getMap().setCurrentRoom(roomSendingToIndex);
      System.out.println("Forcing the player to move");
      Game.getPlayer().forceTo(new Point(100, 100));
+     Game.generateEnemies();
     }
-
 }
