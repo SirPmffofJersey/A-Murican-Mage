@@ -5,6 +5,11 @@
  * @author (your name) 
  * @version (a version number or a date)
  */
+import java.awt.Point;
+
+import Item.Projectile;
+import Main.Game;
+
 public class AttackSpell
 {
     private final String NAME;
@@ -12,27 +17,41 @@ public class AttackSpell
     private final int DAMAGE;
     private final int COST;
     private final double COOL_DOWN_LENGTH;
-    private boolean coolingDown;
+    private int coolDown;
     
     public AttackSpell(String name)
     {
      if(name.equals("fire"))
      {
       NAME="Fire Lobber";
-      RANGE=5;
+      RANGE=250;
       DAMAGE=20;
       COST=10;
-      COOL_DOWN_LENGTH=0.5;      
+      COOL_DOWN_LENGTH=5;      
      }
      else
      {
       NAME="Lightning Strike";
-      RANGE=4;
-      DAMAGE=30;
+      RANGE=500;
+      DAMAGE=50;
       COST=15;
-      COOL_DOWN_LENGTH=0.75;      
+      COOL_DOWN_LENGTH=8;      
      }
      
+    }
+    
+    public boolean use(Point p) {
+    	if(Game.getPlayer().getMana() > COST && coolDown <= 0) {
+    		Game.getPlayer().setMana(Game.getPlayer().getMana() - COST);
+    		coolDown += 5;
+    		createProjectile(p);
+    		return true;
+    	}
+    	return false;
+    }
+    
+    public void createProjectile(Point p) {
+    	Game.addProjectile(new Projectile(this, p));
     }
     
     public String getName()
@@ -50,7 +69,10 @@ public class AttackSpell
     public double getCoolDownLength()
     { return COOL_DOWN_LENGTH;}
     
-    public boolean isCoolingDown()
-    { return coolingDown;}
+    public int getCoolDown()
+    { return coolDown;}
+    
+    public void coolDown()
+    {coolDown--;}
     
 }
