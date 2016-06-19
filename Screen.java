@@ -33,7 +33,6 @@ public class Screen extends JPanel implements MouseListener{
 		frame.requestFocus();
 		frame.addKeyListener(new KeyAdapter()
 		{
-			
 			public void keyPressed(KeyEvent a)
 			{
 				if(a.getKeyCode() == KeyEvent.VK_ESCAPE) {
@@ -48,17 +47,24 @@ public class Screen extends JPanel implements MouseListener{
 			}
 		});
 		
-		System.out.println("Set Menu");
         menu = new Menu("Start");
         withinMenu = true;
         menuName = "Start";
-        System.out.println("Added Elements");
         menu.addJComp(this);
         
         game = new GameGraphics();
         addMouseListener(this);
         
         this.setDoubleBuffered(true);
+        
+        /*
+        getInputMap().put(KeyStroke.getKeyStroke("SPACE"), "pauseMenu");
+        getActionMap().put("pauseMenu", new AbstractAction() {
+        	public void actionPerformed(ActionEvent e) {
+        		setMenu("Pause");
+        	}
+        });
+        */
     }
 	
 	public JFrame getFrame() {
@@ -66,15 +72,10 @@ public class Screen extends JPanel implements MouseListener{
 	}
 	
 	public void paintComponent(Graphics g) {
-		//Image background = new Media("Flag", "image").getImage();
-		//background = Media.setBackground(background, this);		//Doesn't work
-		//g.drawImage(background, 0, 0, this);
 		if(menu != null) {
-			System.out.println("Painting Screen");
 			menu.paintComponent(g);
 		}
 		if(Game.getGameState()) {
-			//System.out.println("Painting Game");
 			game.paintComponent(g);
 		}
 	}
@@ -88,7 +89,6 @@ public class Screen extends JPanel implements MouseListener{
 			menu = null;
 			Game.enterGame();
 		} else {
-			System.out.println("Changing Menu");
 			Game.exitGame();
 			game.stop(frame.getContentPane());
 			withinMenu = true;
@@ -107,13 +107,11 @@ public class Screen extends JPanel implements MouseListener{
 	
 	public static Rectangle getFrameDim() {return frame.getBounds();}
 	
-	public static GameGraphics getGameGraphics() {return game;}
+	public GameGraphics getGameGraphics() {return game;}
 	
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
-		System.out.println(e.getX());
-		System.out.println(e.getY());
 		Game.getPlayer().attack(e);
 	}
 
