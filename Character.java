@@ -1,215 +1,391 @@
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
-import Item.Potion;
+import javax.swing.ImageIcon;
+
+import Item.Projectile;
 import Item.Sword;
-public class Player extends Character
-{
-    private int exp = 0;
-    private int expLimit = 100;
-    private Sword s = new Sword("Dagger");
-    private Potion[] potions;
-    private int attackCounter;
-	private boolean saberUnlocked;
-	private boolean katanaUnlocked;
-    
-    public Player()
-    {
-        super("player",50,50,100,100,10,10,10,1, new Rectangle(50, 50, 100, 100), new Sword("Dagger"), 1);
-        potions = new Potion[2];
-		potions[0] = new Potion(0);
-		potions[1] = new Potion(1);
-		potions[0].setEquipped(true);
-		saberUnlocked = true;
-		katanaUnlocked = true;
-		attackCounter = -1;
-    }
-    
-    public void levelUp()
-    {
-        setLevel(getLevel() +1);
-        setMaxHealth((int)(getMaxHealth() + getMaxHealth() * .25));
-        setHealth(getMaxHealth());
-        setMaxMana((int)(getMaxMana() + getMaxMana() * .25));
-        setMana(getMaxMana());
-        setAttack((int)(getAttack() + getAttack() * .25));
-        setDefense((int)(getDefense() + getDefense() * .25));
-    }
-    
-    public void regenerate()
-    {
-        if(getHealth() < getMaxHealth())
-        {
-            setHealth(getHealth() + 1);
-        }
-        
-        if(getMana() < getMaxMana())
-        {
-            setMana(getMana() + 1);
-        }
-    }
-    
-    public void getLoot(Enemies other)
-    {
-        String d = other.dropLoot();
-        if(d.equals("Health Potion")) {
-        	potions[0].addPotion();
-        	return;
-        }
-        if(d.equals("Mana Potion")) {
-        	potions[1].addPotion();
-        	return;
-        }
-        if(d.equals("Saber")) {
-        	setSaberUnlocked(true);
-        	return;
-        }
-        if(d.equals("Katana")) {
-        	setKatanaUnlocked(true);
-        }
-    }
-    
-    public Potion getEquippedPotion() {
-		if(potions[0].getEquipped())
-			return potions[0];
-		return potions[1];
-	}
-    
-    public String getEquippedPotionName() {
-    	if(potions[0].getEquipped())
-			return "Health";
-		return "Mana";
-    }
+import Main.Game;
+import Map.Doorway;
+import Map.Obstacle;
+import Map.Room;
+import Spell.Buff;
 
-	public void setSelectedPotion(String type) {
-		if(type.equals("Health")) {
-			potions[0].setEquipped(true);
-			potions[1].setEquipped(false);
-		} else {
-			potions[0].setEquipped(false);
-			potions[1].setEquipped(true);
+/**
+ * Abstract class Character - write a description of the class here
+ * 
+ * @author (your name here)
+ * @version (version number or date here)
+ */
+public class Character {
+	// Basic Character Stats
+	private String name;
+	private int health;
+	private int mana;
+	private int maxHealth;
+	private int maxMana;
+	private int attack;
+	private int defense;
+	private int speed;
+	private int level;
+	private int direction;
+	private int state;
+	private int seconds;
+	private boolean immune = false;
+	private ArrayList<Buff> buffs;
+	private Rectangle dimensions;
+	private Rectangle nextDim;				//Used for collisions
+	private Image image;
+	private Sword sword;
+	private int attackWaitTime;
+	private boolean enabled;
+	
+	public Character(String name, int hp, int mp, int maxHp, int maxMp, int atk, int def, int spd, int lvl,
+			Rectangle dim, Sword s, int direct) {
+		this.name = name;
+		health = hp;
+		mana = mp;
+		maxHealth = maxHp;
+		maxMana = maxMp;
+		attack = atk;
+		defense = def;
+		speed = spd;
+		level = lvl;
+		dimensions = dim;
+		nextDim = dim;
+		sword = s;
+		direction = direct;
+		state = 0;
+		image = new ImageIcon(getClass().getResource("/" + name + direction + ".gif")).getImage();
+		attackWaitTime = 0;
+		enabled = true;
+		buffs = new ArrayList<Buff>();
+	}
+
+	// Accessor Methods
+	public String getName() {
+		return name;
+	}
+	
+	public int getHealth() {
+		return health;
+	}
+
+	public int getMana() {
+		return mana;
+	}
+
+	public int getMaxHealth() {
+		return maxHealth;
+	}
+
+	public int getMaxMana() {
+		return maxMana;
+	}
+
+	public int getDefense() {
+		return defense;
+	}
+
+	public int getAttack() {
+		return attack;
+	}
+
+	public int getSpeed() {
+		return speed;
+	}
+
+	public int getLevel() {
+		return level;
+	}
+
+	public int getDirection() {
+		return direction;
+	}
+
+	public Rectangle getDimensions() {
+		return dimensions;
+	}
+
+	
+	public ArrayList<Buff> getBuffs() {return buffs;}
+
+	public Image getImage() {
+		return image;
+	}
+
+	public Sword getSword() {
+		return sword;
+	}
+	
+	public int getWait() {
+		return attackWaitTime;
+	}
+	
+	public boolean getEnabled() {
+		return enabled;
+	}
+
+	// Modifying Methods
+	public void setHealth(int hp) {
+		health = hp;
+	}
+
+	public void setMana(int mp) {
+		mana = mp;
+	}
+
+	public void setMaxHealth(int maxHp) {
+		maxHealth = maxHp;
+	}
+
+	public void setMaxMana(int maxMp) {
+		maxMana = maxMp;
+	}
+
+	public void setDefense(int def) {
+		defense = def;
+	}
+
+	public void setAttack(int atk) {
+		attack = atk;
+	}
+
+	public void setSpeed(int spd) {
+		speed = spd;
+	}
+
+	public void setLevel(int lvl) {
+		level = lvl;
+	}
+	
+	public void setDirection(int d) {
+		direction = d;
+		resetImage();
+	}
+
+	public void setDimensions(int w, int h) {
+		int x = (int)dimensions.getX();
+		int y = (int)dimensions.getY();
+		dimensions = new Rectangle(x, y, w, h);
+	}
+	
+	public void setDimensions(int x, int y, int w, int h) {
+		dimensions = new Rectangle(x, y, w, h);
+	}
+	
+	public void setEnabled(boolean e) {
+		enabled = e;
+	}
+	
+	public void decrementWait() {attackWaitTime--;}
+	
+	public void setWait(int w) {attackWaitTime = w;}
+
+	public void addBuff(Buff b) {
+		buffs.add(b);
+		b.add(this);
+	}
+	
+	public void removeBuff(Buff b) {buffs.remove(b);}
+
+	public void resetImage() {
+		image = new ImageIcon(getClass().getResource("/" + name + direction + ".gif")).getImage();;
+	}
+
+	public void setSword(Sword s) {
+		sword = s;
+	}
+
+	public void setLocation(Point loc) {
+		nextDim = new Rectangle((int)loc.getX(), (int)loc.getY(), (int)dimensions.getWidth(), (int)dimensions.getHeight());
+		for(int i = 0; i < Game.getMap().getCurrentRoom().getNumberOfObstacles(); i++)
+			collision(Game.getMap().getCurrentRoom().getObstacle(i));
+		for(int i = 0; i < Game.getProjectiles().size(); i++)
+			collision(Game.getProjectiles().get(i));
+		dimensions = nextDim;
+		collision(Game.getPlayer().getSword(), loc);
+	}
+
+	public int movementState() {
+		return state % 4;
+	}
+
+	public void attack(Character other) {
+		if (other.dimensions.getX() - dimensions.getX() <= sword.getRange()
+				|| other.dimensions.getY() - dimensions.getY() <= sword.getRange()
+				|| (other.dimensions.getY() - dimensions.getY()) / (other.dimensions.getX() - dimensions.getX()) <= sword
+						.getRange()) {
+			attackWaitTime += 10;
+			other.setHealth(other.getHealth() - sword.getDamage());
+		}
+	}
+
+	public boolean isDead() {
+		if (health <= 0) {
+			Game.getPlayer().getLoot((Enemies)this);
+			Game.getPlayer().addExperiance();
+			return true;
+		}
+		return false;
+	}
+
+	public void move() {
+		//dimensions.move((int) location.getX() + speed, (int) location.getY() + speed);
+	}
+
+	public void attacked(int a) {
+		if(!immune) {
+			if((a - defense) <= 0)
+            	health -= 1; 
+        	else
+            	health -= (a - defense);
+        	Timer timer = new Timer();
+        	timer.schedule(new TimerTask(){
+            	public void run()
+            	{
+                	seconds ++; 
+                	immune = true; 
+                	if(seconds >= 8)
+                	{
+                    		immune = false;  
+                    		seconds = 0;
+                    		timer.cancel();
+                    		timer.purge(); 
+                	}
+            	}
+        	}, 1000 ,1000);  
 		}
 	}
 	
-	public boolean getSaberUnlocked() {return saberUnlocked;}
+	/*
+	public boolean collision(Character c) {
+		int coordinateX = Math.abs((int) c.getDimensions().getX() - (int) location.getX());
+		int coordinateY = Math.abs((int) c.getDimensions().getY() - (int) location.getY());
+		int distance = coordinateX + coordinateY;
+		if (distance <= 50)
+			return true;
+		return false;
+	}
+	*/
 	
-	public boolean getKatanaUnlocked() {return katanaUnlocked;}
-	
-	public void setSaberUnlocked(boolean s) {saberUnlocked = s;}
-	
-	public void setKatanaUnlocked(boolean k) {katanaUnlocked = k;}
-	
-	public int getAttackCount() {return attackCounter;}
-	
-	public void decrementAttackCount() {attackCounter--;}
-	
-	public Rectangle setSwordDim() {
-		int d = getDirection();
-		if(d == 1)
-			return new Rectangle((int)(getDimensions().getX() + (getDimensions().getWidth() - getSword().getWidth())/2), (int)(getDimensions().getY() - getSword().getRange()), (int)getSword().getWidth(), (int)getSword().getRange());
-		if(d == 2)
-			return new Rectangle((int)(getDimensions().getX() + getDimensions().getWidth()), (int)(getDimensions().getY()+ (getDimensions().getHeight() - getSword().getWidth())/2), (int)getSword().getRange(), (int)getSword().getWidth());
-		if(d == 3)
-			return new Rectangle((int)(getDimensions().getX() + (getDimensions().getWidth() - getSword().getWidth())/2), (int)(getDimensions().getY() + getDimensions().getHeight()), (int)getSword().getWidth(), (int)getSword().getRange());
-		if(d == 4)
-			return new Rectangle((int)(getDimensions().getX() - getSword().getRange()), (int)(getDimensions().getY()+ (getDimensions().getHeight() - getSword().getWidth())/2), (int)getSword().getRange(), (int)getSword().getWidth());
-		return null;
+	public boolean collision(Character c) {
+		return false;
 	}
 	
-	public void stopAttack() {
-		getSword().setDim(null);
-		attackCounter = -1;
+	public boolean collision(Projectile p){
+		if(p.getDim().intersects(dimensions) && Game.getPlayer() != this) {
+			attacked(p.getSpell().getDamage());
+			if(p.getBuff() != null)
+				addBuff(p.getBuff());
+			p.setToBeRemoved();
+			return true;
+		}
+		return false;
 	}
-    
-    public void move(KeyEvent e) 
-    {    
-    	 if(attackCounter <= 0) {
-	         if(e.getKeyCode() == KeyEvent.VK_W)
-	         {
-	        	 setDirection(1);
-	             setLocation(new Point((int)getDimensions().getX(),(int)getDimensions().getY() - getSpeed())); 
-	             super.hitWall();
-	         }
-	         else if(e.getKeyCode() == KeyEvent.VK_A)
-	         {
-	        	 setDirection(4);
-	             setLocation(new Point((int)getDimensions().getX() - getSpeed(),(int)getDimensions().getY())); 
-	             super.hitWall();
-	         }
-	         else if(e.getKeyCode() == KeyEvent.VK_D)
-	         {
-	        	 setDirection(2);
-	             setLocation(new Point((int)getDimensions().getX() + getSpeed(),(int)getDimensions().getY())); 
-	             super.hitWall();
-	         }
-	         else if(e.getKeyCode() == KeyEvent.VK_S)
-	         {
-	        	 setDirection(3);
-	             setLocation(new Point((int)getDimensions().getX(),(int)getDimensions().getY() + getSpeed())); 
-	             super.hitWall();
-	         }
-	         else if(e.getKeyCode() == KeyEvent.VK_Q)
-	         {
-	             getEquippedPotion().use(this);
-	         }
-    	 }
-         
-    }
-    
-    public void attack(MouseEvent e)
-    {
-        if(e.getClickCount() == 1)
-        {
-            if(e.getButton() == MouseEvent.BUTTON1)
-            {
-                System.out.println("You attacked"); 
-                /*
-                if(canAttack(c))
-                {
-                    c.attacked(getAttack());
-                    if(c.getHealth() == 0)
-                        addExperiance();
-                }
-                */
-                if(attackCounter < 0) {
-                	attackCounter = getSword().getSwingSpeed();
-                	getSword().setDim(setSwordDim());
-                }
-            }
-            if(e.getButton() == MouseEvent.BUTTON3)
-            {
-                System.out.println("You used a spell"); 
-                /*
-                if(canUseMagic(c,0))
-                {
-                    c.magicAttack(c,0);
-                    c.attacked(getAttack());
-                    if(c.getHealth() == 0)
-                        addExperiance();
-                }
-                */
-            }
-        }
-    }
-    
-    public void addExperiance() 
-    {
-        exp += 10; 
-        if(exp == 100)
-        {
-            System.out.print("You leveled up, you are now level " + getLevel()); 
-            exp = 0; 
-            levelUp(); 
-        }
-    }
-    
-    public void forceTo(Point p) {
-    	System.out.println(p.getX());
-    	System.out.println(p.getY());
-    	setDimensions((int)p.getX(), (int)p.getY(), (int)getDimensions().getWidth(), (int)getDimensions().getHeight());
-    	System.out.println(getDimensions().getX());
-    	System.out.println(getDimensions().getY());
-    }
+	
+	public boolean collision(Sword s, Point p) {
+		if(s.getDim() == null)
+			return false;
+		if(s.getDim().intersects(dimensions) && Game.getPlayer() != this) {
+			attacked(Game.getPlayer().getAttack() + s.getDamage());
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean collision(Obstacle o) {
+		Doorway d = null;
+		if(o instanceof Doorway) {
+			d = (Doorway)o;
+			if(d.getEnabled() && o.getDimensions().intersects(nextDim)) {
+				d.travel();
+			} else {
+				return false;
+			}
+		} else {
+			if(o.getDimensions().intersects(nextDim)) {
+				if(o.getDimensions().getX() >= dimensions.getX() + dimensions.getWidth() && o.getDimensions().getX() < nextDim.getX() + nextDim.getWidth()) {
+					nextDim = new Rectangle((int)(o.getDimensions().getX() - nextDim.getWidth()), (int)nextDim.getY(), (int)nextDim.getWidth(), (int)nextDim.getHeight());
+					return true;
+				} else if(o.getDimensions().getX() + o.getDimensions().getWidth() <= dimensions.getX() && o.getDimensions().getX() + o.getDimensions().getWidth() > nextDim.getX()) {
+					nextDim = new Rectangle((int)(o.getDimensions().getX() + o.getDimensions().getWidth()), (int)nextDim.getY(), (int)nextDim.getWidth(), (int)nextDim.getHeight());
+					return true;
+				} else if(o.getDimensions().getY() >= dimensions.getY() + dimensions.getHeight() && o.getDimensions().getY() < nextDim.getY() + nextDim.getHeight()) {
+					nextDim = new Rectangle((int)nextDim.getX(), (int)(o.getDimensions().getY() - nextDim.getHeight()), (int)nextDim.getWidth(), (int)nextDim.getHeight());
+					return true;
+				} else if(o.getDimensions().getY() + o.getDimensions().getHeight() <= dimensions.getY() && o.getDimensions().getY() + o.getDimensions().getHeight() > nextDim.getY()) {
+					nextDim = new Rectangle((int)nextDim.getX(), (int)(o.getDimensions().getY() + o.getDimensions().getHeight()), (int)nextDim.getWidth(), (int)nextDim.getHeight());
+					return true;
+				}
+			} else
+				return false;
+		}
+		return false;
+	}
+
+	public void hitWall() {
+		int maxX = (int)(Game.getMap().getCurrentRoom().getDim().getX() + Game.getMap().getCurrentRoom().getDim().getWidth() - dimensions.getWidth());
+		int maxY = (int)(Game.getMap().getCurrentRoom().getDim().getY() + Game.getMap().getCurrentRoom().getDim().getHeight() - dimensions.getHeight());
+		if (dimensions.getX() >= maxX)
+			setLocation(new Point(maxX, (int) dimensions.getY()));
+		if (dimensions.getX() <= 0)
+			setLocation(new Point(0, (int) dimensions.getY()));
+		if (dimensions.getY() >= maxY)
+			setLocation(new Point((int) dimensions.getX(), maxY));
+		if (dimensions.getY() <= 0)
+			setLocation(new Point((int) dimensions.getX(), 0));
+
+	}
+
+	public boolean canAttack(Character c) {
+		if(enabled) {
+			if(attackWaitTime <= 0) {
+				int coordinateX = Math.abs((int) c.getDimensions().getX() - (int) dimensions.getX());
+				int coordinateY = Math.abs((int) c.getDimensions().getY() - (int) dimensions.getY());
+				int distance = coordinateX + coordinateY;
+				if (distance <= 100)
+					return true;
+			} else {
+				attackWaitTime--;
+			}
+		}
+		return false;
+	}
+
+	public void moveTowardPlayer(Character c) {
+		if(enabled) {
+			int newD = 0;
+			if (c.getDimensions().getX() > (int) dimensions.getX()) {
+				setLocation(new Point((int) dimensions.getX() + 10, (int) dimensions.getY()));
+				newD = 2;
+				hitWall();
+			} else if (c.getDimensions().getX() < (int) dimensions.getX()) {
+				setLocation(new Point((int) dimensions.getX() - 10, (int) dimensions.getY()));
+				newD = 4;
+				hitWall();
+			}
+			if (c.getDimensions().getY() > (int) dimensions.getY()) {
+				setLocation(new Point((int) dimensions.getX(), (int) dimensions.getY() + 10));
+				newD = 3;
+				hitWall();
+			} else if (c.getDimensions().getY() < (int) dimensions.getY()) {
+				setLocation(new Point((int) dimensions.getX(), (int) dimensions.getY() - 10));
+				newD = 1;
+				hitWall();
+			}
+			
+			if(newD != 0 && newD != getDirection())
+				setDirection(newD);
+		}
+	}
+	
+	public boolean insideMap(int roomNum)
+    	{
+        	return dimensions.getX() > new Room(roomNum).getDim().getX() && dimensions.getY() > new Room(roomNum).getDim().getY() && dimensions.getX() < new Room(roomNum).getDim().getX() + new Room(roomNum).getDim().getWidth() && dimensions.getY() < new Room(roomNum).getDim().getY() + new Room(roomNum).getDim().getHeight();
+    	}
 }
