@@ -101,10 +101,13 @@ public class Player extends Character
         }
         if(d.equals("Saber")) {
         	setSaberUnlocked(true);
+        	Game.getScreen().getGameGraphics().addString("You unlocked the Saber");
         	return;
         }
         if(d.equals("Katana")) {
         	setKatanaUnlocked(true);
+        	Game.getScreen().getGameGraphics().addString("You unlocked the Katana");
+        	return;
         }
     }
     
