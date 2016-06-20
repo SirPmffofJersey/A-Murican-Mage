@@ -9,8 +9,6 @@ import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
@@ -25,10 +23,15 @@ import Main.Game;
 import Map.Obstacle;
 import Map.Room;
 
-public class GameGraphics extends JPanel implements KeyListener{
-	/**
-	 * 
-	 */
+/**
+ * <h1> Game Graphics </h1>
+ * This class paints the actual game play
+ * onto the screen.
+ * 
+ * @author Douglas Fisher
+ * @since 6/5/16
+ */
+public class GameGraphics extends JPanel{
 	private static final long serialVersionUID = 420L;
 	private final int GAMEPLAY_SCREEN_WIDTH = 1024, GAMEPLAY_SCREEN_HEIGHT = 768;
 	private Image gameInterface;
@@ -43,6 +46,11 @@ public class GameGraphics extends JPanel implements KeyListener{
 	private ArrayList<String> strings;
 	private int stringCount;
 	
+	/**
+	 * This is a constructor to build an object of GameGraphics.
+	 * This constructor initializes most of the variables and 
+	 * does some initial scaling
+	 */
 	public GameGraphics() {
 		gameInterface = new ImageIcon(getClass().getResource("/PlayerInterfaceV1.png")).getImage();
 		//gameInterface = Media.changeWhiteToTransparent(Media.toBufferedImage(gameInterface));
@@ -64,6 +72,144 @@ public class GameGraphics extends JPanel implements KeyListener{
 		stringCount = 2000;
 	}
 	
+	/**
+	 * This method adds all of the JCompoents to
+	 * the specified container.
+	 * @param c The container that the JComponents are being added to
+	 */
+	private void addJComp(Container c) {
+		if(labels != null)
+			for(JLabel l: labels)
+				if(l != null)
+					c.add(l);
+	}
+	
+	/**
+	 * Adds the specified string to a an Arraylist of 
+	 * to-be-displayed strings
+	 * @param s The String going into the ArrayList
+	 */
+	public void addString(String s) {
+		strings.add(s);
+	}
+	
+	/**
+	 * This method paints a specific character onto the 
+	 * screen.
+	 * @param c This is the Character that is being painted
+	 * @param g2 This is the Graphics2D object used to paint the game
+	 */
+	private void drawCharacter(Charactor.Character c, Graphics2D g2) {
+		Image image = c.getImage();
+		g2.drawImage(image, (int)(innerRoom.getX() + (c.getDimensions().getX() * centiunitToPixel)), (int)(innerRoom.getY() + (c.getDimensions().getY() * centiunitToPixel)), (int)(c.getDimensions().getWidth() * centiunitToPixel), (int)(c.getDimensions().getHeight() * centiunitToPixel), this);
+	}
+	
+	/**
+	 * This method paints all the characters onto the screen,
+	 * including the player.
+	 * @param g2 This is the Graphics2D object used to paint the game
+	 */
+	private void drawCharacters(Graphics2D g2) {
+		drawCharacter(player, g2);
+		if(player.getAttackCount() > 0){
+			g2.drawImage(player.getSword().getImage(), (int)(innerRoom.getX() + player.getSword().getDim().getX() * centiunitToPixel), (int)(innerRoom.getY() + player.getSword().getDim().getY() * centiunitToPixel), (int)(player.getSword().getDim().getWidth() * centiunitToPixel), (int)(player.getSword().getDim().getHeight() * centiunitToPixel), this);
+		}
+		ArrayList<Enemies> e = Game.getEnemies();
+		for(int i = 0; i < e.size(); i++) {
+			drawCharacter(e.get(i), g2);
+		}
+	}
+	
+	/**
+	 * This method calls all methods needed to draw the 
+	 * game elements.
+	 * @param g2 This is the Graphics2D object used to paint the game
+	 */
+	private void drawGame(Graphics2D g2) {
+		drawRoom(g2);
+		drawCharacters(g2);
+		drawProjectiles(g2);
+	}
+	
+	/**
+	 * This method paints a specified obstacle onto the screen.
+	 * @param o This is the Obstacle that is being painted
+	 * @param g2 This is the Graphics2D object used to paint the game
+	 */
+	private void drawObstacle(Obstacle o, Graphics2D g2) {
+		g2.drawImage(o.getImage(), (int)(innerRoom.getX() + (o.getDimensions().getX() * centiunitToPixel)), (int)(innerRoom.getY() + (o.getDimensions().getY() * centiunitToPixel)), (int)(o.getDimensions().getWidth() * centiunitToPixel), (int)(o.getDimensions().getHeight() * centiunitToPixel), this);
+	}
+	
+	/**
+	 * This method paints a specific projectile onto the screen.
+	 * @param p This is the Projectile that is being painted
+	 * @param g2 This is the Graphics2D object used to paint the game
+	 */
+	private void drawProjectile(Projectile p, Graphics2D g2) {
+		g2.drawImage(p.getImage(), (int)(innerRoom.getX() + (p.getDim().getX() * centiunitToPixel)), (int)(innerRoom.getY() + (p.getDim().getY() * centiunitToPixel)), (int)(p.getDim().getWidth() * centiunitToPixel), (int)(p.getDim().getHeight() * centiunitToPixel), this);
+	}
+	
+	/**
+	 * This method paints all the projectiles onto the screen.
+	 * @param g2 This is the Graphics2D object used to paint the game
+	 */
+	private void drawProjectiles(Graphics2D g2) {
+		ArrayList<Projectile> p = Game.getProjectiles();
+		for(int i = 0; i < p.size(); i++) {
+			drawProjectile(p.get(i), g2);
+		}
+	}
+	
+	/**
+	 * This method draws the room's image, sets the innerRoom and 
+	 * the centiunitToPixel scale, and calls the method to paint all the
+	 * obstacles.
+	 * @param g2 This is the Graphics2D object used to paint the game
+	 */
+	private void drawRoom(Graphics2D g2) {
+		Room room = Game.getMap().getCurrentRoom();
+		Image image = new ImageIcon(getClass().getResource("/" + room.getImageName() + ".png")).getImage();
+		int w = image.getWidth(this);
+		int h = image.getHeight(this);
+		double scale1 = roomDisDim.getWidth()/w, scale2 = roomDisDim.getHeight()/h;
+		if(scale1 > scale2) {
+			g2.drawImage(image, (int)(Math.abs((w * scale2) - roomDisDim.getWidth()) / 2 + roomDisDim.getX()), (int)roomDisDim.getY(), (int)(w * scale2), (int)roomDisDim.getHeight(), this);
+			innerRoom = new Point((int)((Math.abs((w * scale2) - roomDisDim.getWidth()) / 2 + roomDisDim.getX()) + ((w * scale2) * (100/(room.getDim().getWidth() + 200)))), (int)(roomDisDim.getY() + (roomDisDim.getHeight() * (100/(room.getDim().getHeight() + 200)))));
+			centiunitToPixel = (w * scale2) / (room.getDim().getWidth() + 200);
+		} else {
+			g2.drawImage(image, (int)roomDisDim.getX(), (int)(Math.abs((h * scale1) - roomDisDim.getHeight()) / 2 + roomDisDim.getY()), (int)roomDisDim.getWidth(), (int)(h * scale1), this);
+			innerRoom = new Point((int)(roomDisDim.getX()  + (roomDisDim.getWidth() * (100/(room.getDim().getWidth() + 200)))), (int)((Math.abs((h * scale1) - roomDisDim.getHeight()) / 2 + roomDisDim.getY()) + ((h * scale1) * (100/(room.getDim().getHeight() + 200)))));
+			centiunitToPixel = (h * scale1) / (room.getDim().getHeight() + 200);
+		}
+		for(int i = 0; i < Game.getMap().getCurrentRoom().getNumberOfObstacles(); i++)
+			drawObstacle(Game.getMap().getCurrentRoom().getObstacle(i), g2);
+	}
+	
+	/**
+	 * This method returns the dimensions for the game/player interface
+	 * that is calculated in the constructor.
+	 * @return gameDim This is the dimensions for the game/player interface
+	 */
+	public Rectangle getGameDim() {
+		return gameDim;
+	}
+	
+	/**
+	 * This method takes a point clicked on the screen and 
+	 * sets in relation to the player. Used for projectiles.
+	 * @param m This is a point clicked on the screen
+	 * @return Point This is the parameter m set in relation to the player
+	 */
+	public Point mouseToPointConv(Point m) {
+		return new Point((int)(m.getX() - innerRoom.getX() - Game.getPlayer().getDimensions().getCenterX() * centiunitToPixel), (int)(m.getY() - innerRoom.getY() - Game.getPlayer().getDimensions().getCenterY() * centiunitToPixel));
+	}
+	
+	/**
+	 * This method is in charge of painting the screen.
+	 * This means constructing a Graphics2D object, calling sub-methods,
+	 * and begin painting/scaling.
+	 * @param g This is the Graphics object used to paint onto the screen
+	 */
 	public void paintComponent(Graphics g) {
 		Graphics2D g2 = (Graphics2D)g;
 		g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
@@ -79,78 +225,9 @@ public class GameGraphics extends JPanel implements KeyListener{
 		g2.drawImage(gameInterface, (int)gameDim.getX(), (int)gameDim.getY(), (int)gameDim.getWidth(), (int)gameDim.getHeight(), this);
 	}
 	
-	public void stop(Container c) {
-		removeJComp(c);
-	}
-	
-	public void start(Container c) {
-		setJComp();
-		addJComp(c);
-	}
-	
-	public Rectangle getGameDim() {
-		return gameDim;
-	}
-	
-	private void drawGame(Graphics2D g2) {
-		drawRoom(g2);
-		drawCharacters(g2);
-		drawProjectiles(g2);
-	}
-	
-	private void drawRoom(Graphics2D g2) {
-		Room room = Game.getMap().getCurrentRoom();
-		Image image = new ImageIcon(getClass().getResource("/" + room.getImageName() + ".png")).getImage();
-		int w = image.getWidth(this);
-		int h = image.getHeight(this);
-		double scale1 = roomDisDim.getWidth()/w, scale2 = roomDisDim.getHeight()/h;
-		if(scale1 > scale2) {
-			g2.drawImage(image, (int)(Math.abs((w * scale2) - roomDisDim.getWidth()) / 2 + roomDisDim.getX()), (int)roomDisDim.getY(), (int)(w * scale2), (int)roomDisDim.getHeight(), this);
-			//innerRoom = new Point((int)((Math.abs((w * scale2) - roomDisDim.getWidth()) / 2 + roomDisDim.getX()) + (w * (100/(room.getDim().getWidth() + 200)))), (int)(roomDisDim.getY() + (h * (100/(room.getDim().getHeight() + 200)))));
-			innerRoom = new Point((int)((Math.abs((w * scale2) - roomDisDim.getWidth()) / 2 + roomDisDim.getX()) + ((w * scale2) * (100/(room.getDim().getWidth() + 200)))), (int)(roomDisDim.getY() + (roomDisDim.getHeight() * (100/(room.getDim().getHeight() + 200)))));
-			centiunitToPixel = (w * scale2) / (room.getDim().getWidth() + 200);
-		} else {
-			g2.drawImage(image, (int)roomDisDim.getX(), (int)(Math.abs((h * scale1) - roomDisDim.getHeight()) / 2 + roomDisDim.getY()), (int)roomDisDim.getWidth(), (int)(h * scale1), this);
-			innerRoom = new Point((int)(roomDisDim.getX()  + (roomDisDim.getWidth() * (100/(room.getDim().getWidth() + 200)))), (int)((Math.abs((h * scale1) - roomDisDim.getHeight()) / 2 + roomDisDim.getY()) + ((h * scale1) * (100/(room.getDim().getHeight() + 200)))));
-			centiunitToPixel = (h * scale1) / (room.getDim().getHeight() + 200);
-		}
-		for(int i = 0; i < Game.getMap().getCurrentRoom().getNumberOfObstacles(); i++)
-			drawObstacle(Game.getMap().getCurrentRoom().getObstacle(i), g2);
-		//g2.drawRect((int)roomDim.getX(), (int)roomDim.getY(), (int)roomDim.getWidth(), (int)roomDim.getHeight());
-	}
-	
-	private void drawObstacle(Obstacle o, Graphics2D g2) {
-		g2.drawImage(o.getImage(), (int)(innerRoom.getX() + (o.getDimensions().getX() * centiunitToPixel)), (int)(innerRoom.getY() + (o.getDimensions().getY() * centiunitToPixel)), (int)(o.getDimensions().getWidth() * centiunitToPixel), (int)(o.getDimensions().getHeight() * centiunitToPixel), this);
-		//g2.drawRect((int)(innerRoom.getX() + (o.getDimensions().getX() * centiunitToPixel)), (int)(innerRoom.getY() + (o.getDimensions().getY() * centiunitToPixel)), (int)(o.getDimensions().getWidth() * centiunitToPixel), (int)(o.getDimensions().getHeight() * centiunitToPixel));
-	}
-	
-	private void drawCharacters(Graphics2D g2) {
-		drawCharacter(player, g2);
-		if(player.getAttackCount() > 0){
-			g2.drawImage(player.getSword().getImage(), (int)(innerRoom.getX() + player.getSword().getDim().getX() * centiunitToPixel), (int)(innerRoom.getY() + player.getSword().getDim().getY() * centiunitToPixel), (int)(player.getSword().getDim().getWidth() * centiunitToPixel), (int)(player.getSword().getDim().getHeight() * centiunitToPixel), this);
-		}
-		ArrayList<Enemies> e = Game.getEnemies();
-		for(int i = 0; i < e.size(); i++) {
-			drawCharacter(e.get(i), g2);
-		}
-	}
-	
-	private void drawCharacter(Charactor.Character c, Graphics2D g2) {
-		Image image = c.getImage();
-		g2.drawImage(image, (int)(innerRoom.getX() + (c.getDimensions().getX() * centiunitToPixel)), (int)(innerRoom.getY() + (c.getDimensions().getY() * centiunitToPixel)), (int)(c.getDimensions().getWidth() * centiunitToPixel), (int)(c.getDimensions().getHeight() * centiunitToPixel), this);
-	}
-	
-	private void drawProjectiles(Graphics2D g2) {
-		ArrayList<Projectile> p = Game.getProjectiles();
-		for(int i = 0; i < p.size(); i++) {
-			drawProjectile(p.get(i), g2);
-		}
-	}
-	
-	private void drawProjectile(Projectile p, Graphics2D g2) {
-		g2.drawImage(p.getImage(), (int)(innerRoom.getX() + (p.getDim().getX() * centiunitToPixel)), (int)(innerRoom.getY() + (p.getDim().getY() * centiunitToPixel)), (int)(p.getDim().getWidth() * centiunitToPixel), (int)(p.getDim().getHeight() * centiunitToPixel), this);
-	}
-	
+	/**
+	 * This method initializes all of the JComponents on the screen.
+	 */
 	private void setJComp() {
 		labels = new JLabel[12];
 		//
@@ -264,6 +341,31 @@ public class GameGraphics extends JPanel implements KeyListener{
 		labels[11].setForeground(Color.GREEN);
 	}
 	
+	/**
+	 * This method calls the private method that 
+	 * adds GameGraphic's JComponents to the specified container and the method to initialize
+	 * the JComponents. Used when changing a menu to the game play display.
+	 * @param c This is the container the JComponents need to be added to
+	 */
+	public void start(Container c) {
+		setJComp();
+		addJComp(c);
+	}
+	
+	/**
+	 * This method calls the private method that removes GameGraphic's 
+	 * JComponents from the specified container.
+	 * Used when changing the game play display to a menu.
+	 * @param c This is the container the JComponents need to be removed from
+	 */
+	public void stop(Container c) {
+		removeJComp(c);
+	}
+	
+	/**
+	 * This methods updates the text, dimensions, and colors 
+	 * for the JComponents.
+	 */
 	private void updateLabels() {
 		labels[0].setText("" + player.getLevel());
 		labels[0].setBounds((int)(gameDim.getWidth() * 0.03819444 + gameDim.getX()), (int)(gameDim.getHeight() * 0.06018518 + gameDim.getY()), (int)(gameDim.getWidth() * 0.03055555), (int)(gameDim.getHeight() * 0.04814814));
@@ -320,43 +422,15 @@ public class GameGraphics extends JPanel implements KeyListener{
 			labels[player.getSelectedSpell() + 4].setForeground(Color.GREEN);
 	}
 	
-	private void addJComp(Container c) {
-		if(labels != null)
-			for(JLabel l: labels)
-				if(l != null)
-					c.add(l);
-	}
-	
+	/**
+	 * This method removes all the JComponents 
+	 * from the specified container
+	 * @param c The container that the JComponents are being removed from
+	 */
 	private void removeJComp(Container c) {
 		if(labels != null)
 			for(JLabel l: labels)
 				if(l != null)
 					c.remove(l);
-	}
-	
-	public void addString(String s) {
-		strings.add(s);
-	}
-	
-	public Point mouseToPointConv(Point m) {
-		return new Point((int)(m.getX() - innerRoom.getX() - Game.getPlayer().getDimensions().getCenterX() * centiunitToPixel), (int)(m.getY() - innerRoom.getY() - Game.getPlayer().getDimensions().getCenterY() * centiunitToPixel));
-	}
-
-	@Override
-	public void keyPressed(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
 	}
 }
