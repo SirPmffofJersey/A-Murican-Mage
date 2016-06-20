@@ -20,7 +20,7 @@ import Spell.Buff;
  * The character class is the skeleton for all the enemies and the player, 
  * it has methods to check all types of collisions, movement and how they attack.
  * 
- * @author Jimmy Greaves
+ * @author Jimmy Greaves and Will Roberts 
  * @version 5.6 6/18/16
  */
 public class Character {
