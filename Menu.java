@@ -1,3 +1,5 @@
+package Graphics;
+
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Font;
@@ -19,22 +21,28 @@ import javax.swing.SwingConstants;
 import Item.Sword;
 import Main.Game;
 
+/**
+ * <h1> Menu Class: </h1>
+ * This class paints the constructed menu onto the screen.
+ * 
+ * @author Douglas Fisher
+ * @since 6/5/16
+ */
 public class Menu extends JPanel implements ActionListener {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 2L;	//Research more
 	private String name;
-	private Rectangle dim;		//Not used yet
 	private Button[] buttons;
 	private JLabel[] labels;
 	private Image image;
 	private Rectangle r;
 	
-	
+	/**
+	 * This is a constructor the builds a Menu object whose
+	 * elements depend of the name of the menu.
+	 * @param n This is the name of the menu
+	 */
 	public Menu(String n) {
 		name = n;
-		dim = getDim(n);
 		buttons = setButtons(n);
 		labels = setLabels(n);
 		if(name.equals("Start") || name.equals("Pause") || name.equals("Help")) {
@@ -46,6 +54,76 @@ public class Menu extends JPanel implements ActionListener {
 		}
 	}
 	
+	/**
+	 * This method performs an specific action based on the 
+	 * ActionEvent's action command.
+	 */
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if("Exit".equals(e.getActionCommand())) {
+			System.exit(0);
+		} else if("Play".equals(e.getActionCommand())) {
+			Screen.setMenu("Story");
+		} else if("Continue".equals(e.getActionCommand())) {
+			Screen.setMenu("None");
+		} else if("Help".equals(e.getActionCommand())) {
+			Screen.setMenu("Help");
+		} else if("Back".equals(e.getActionCommand())) {
+			Screen.setMenu("None");
+		} else if("Back2".equals(e.getActionCommand())) {
+			Screen.setMenu("Start");
+		} else if("New Game".equals(e.getActionCommand())) {
+			Game.restartGame();
+		} else if("SelectH".equals(e.getActionCommand())) {
+			Game.getPlayer().setSelectedPotion("Health");
+		} else if("SelectM".equals(e.getActionCommand())) {
+			Game.getPlayer().setSelectedPotion("Mana");
+		} else if("SelectD".equals(e.getActionCommand())) {
+			Game.getPlayer().setSword(new Sword("Dagger"));
+		} else if("SelectS".equals(e.getActionCommand())) {
+			if(Game.getPlayer().getSaberUnlocked())
+				Game.getPlayer().setSword(new Sword("Saber"));
+		} else if("SelectK".equals(e.getActionCommand())) {
+			if(Game.getPlayer().getKatanaUnlocked())
+				Game.getPlayer().setSword(new Sword("Katana"));
+		}
+	}
+	
+	/**
+	 * This method adds all of this menu's
+	 * Buttons to a specified container.
+	 * @param c This is the Container that the buttons are being added to
+	 */
+	private void addButtons(Container c) {
+		for(int i = 0; i < buttons.length; i++)
+			c.add(buttons[i]);
+	}
+	
+	/**
+	 * This method adds all of this menu's
+	 * JLabels to a specified container.
+	 * @param c This is the Container that the labels are being added to
+	 */
+	private void addLabels(Container c) {
+		for(int i = 0; i < labels.length; i++)
+			c.add(labels[i]);
+	}
+	
+	/**
+	 * This method calls all the sub-methods to add
+	 * all of this menu's JComponents to a specified 
+	 * Container.
+	 * @param c This is the Container that the JComponents are being added to
+	 */
+	public void addJComp(Container c) {
+		addButtons(c);
+		addLabels(c);
+	}
+	
+	/**
+	 * This method paints the menu onto the screen.
+	 * @param This is the graphics that is used to paint onto the screen
+	 */
 	public void paintComponent(Graphics g) {
 		Graphics2D g2 = (Graphics2D)g;
 		updateJComp();
@@ -54,26 +132,43 @@ public class Menu extends JPanel implements ActionListener {
 		g2.drawImage(image, (int)r.getX(), (int)r.getY(), (int)r.getWidth(), (int)r.getHeight(), this);
 	}
 	
-	private Rectangle getDim(String n){
-		if(n.equals("Start") || n.equals("Pause"))
-			return Screen.getFrameDim();
-		return new Rectangle(0,0,0,0);
-	}
-
-	public void addJComp(Container c) {
-		if(hasButtons())
-			addButtons(c);
-		if(hasLabels())
-			addLabels(c);
-	}
-
-	public void removeJComp(Container c) {
-		if(hasButtons())
-			removeButtons(c);
-		if(hasLabels())
-			removeLabels(c);
+	/**
+	 * This method removes all of the Buttons
+	 * from the specified Container.
+	 * @param c This is the container that buttons are being removed from
+	 */
+	private void removeButtons(Container c) {
+		for(int i = 0; i < buttons.length; i++)
+			c.remove(buttons[i]);
 	}
 	
+	/**
+	 * This method removes all of the JLabels
+	 * from the specified Container
+	 * @param c This is the container that labels are being removed from
+	 */
+	private void removeLabels(Container c) {
+		for(int i = 0; i < labels.length; i++)
+			c.remove(labels[i]);
+	}
+	
+	/**
+	 * This method calls all the sub-methods to remove
+	 * all of this menu's JComponents from a specified 
+	 * Container.
+	 * @param c This is the Container that the JComponents are being removed from
+	 */
+	public void removeJComp(Container c) {
+		removeButtons(c);
+		removeLabels(c);
+	}
+	
+	/**
+	 * This method sets the properties of all of
+	 * this menu's buttons.
+	 * @param n This is the name of the menu
+	 * @return Buttons[] This is the array of Buttons that are associated with this menu
+	 */
 	private Button[] setButtons(String n) {
 		Button[] b = null;
 		if(n.equals("Start")) {
@@ -287,16 +382,12 @@ public class Menu extends JPanel implements ActionListener {
 		return b;
 	}
 	
-	private void addButtons(Container c) {
-		for(int i = 0; i < buttons.length; i++)
-			c.add(buttons[i]);
-	}
-	
-	private void removeButtons(Container c) {
-		for(int i = 0; i < buttons.length; i++)
-			c.remove(buttons[i]);
-	} 
-	
+	/**
+	 * This method sets the properties of all of
+	 * this menu's labels.
+	 * @param n This is the name of the menu
+	 * @return JLabels[] This is the array of JLabels that are associated with this menu
+	 */
 	private JLabel[] setLabels(String n) {
 		JLabel[] l = null;
 		if(n.equals("Start")) {
@@ -352,14 +443,14 @@ public class Menu extends JPanel implements ActionListener {
 			l[0].setBounds(0, Screen.getFrameDim().height / 4 - 100, Screen.getFrameDim().width, 200);
 			l[0].setHorizontalAlignment(SwingConstants.CENTER);
 			l[0].setVerticalAlignment(SwingConstants.CENTER);
-			l[0].setForeground(Color.MAGENTA);
+			l[0].setForeground(Color.WHITE);
 			l[0].setFont(new Font("Jokerman", Font.BOLD, 100));
 			//
 			l[1] = new JLabel("Story2");
 			l[1].setBounds(0, Screen.getFrameDim().height / 4 - 350, Screen.getFrameDim().width, Screen.getFrameDim().height - (Screen.getFrameDim().height / 4 - 150));
 			l[1].setHorizontalAlignment(SwingConstants.CENTER);
 			l[1].setVerticalAlignment(SwingConstants.CENTER);
-			l[1].setForeground(Color.MAGENTA);
+			l[1].setForeground(Color.WHITE);
 			l[1].setFont(new Font("Arial", Font.BOLD, 20));
 		} else if(n.equals("Inventory")) {
 			l = new JLabel[8];
@@ -438,6 +529,10 @@ public class Menu extends JPanel implements ActionListener {
 		return l;
 	}
 	
+	/**
+	 * This updates the text and dimensions of all of
+	 * this menu's JComponents.
+	 */
 	private void updateJComp() {
 		Rectangle r = Screen.getFrameDim();
 		if(name.equals("Start")) {
@@ -494,9 +589,11 @@ public class Menu extends JPanel implements ActionListener {
 			buttons[3].setText("Dagger");
 			buttons[3].setBounds((int)(r.getX() + r.getWidth() * .4), (int)(r.getY() + r.getHeight() * (1.0/3)), (int)(r.getWidth() * .2), (int)(r.getHeight() * .1));
 			//Saber Button
+			buttons[4].setEnabled(Game.getPlayer().getSaberUnlocked());
 			buttons[4].setText("Saber");
 			buttons[4].setBounds((int)(r.getX() + r.getWidth() * .4), (int)(r.getY() + r.getHeight() * (1.0/2)), (int)(r.getWidth() * .2), (int)(r.getHeight() * .1));
 			//Katana Button
+			buttons[5].setEnabled(Game.getPlayer().getKatanaUnlocked());
 			buttons[5].setText("Katana");
 			buttons[5].setBounds((int)(r.getX() + r.getWidth() * .4), (int)(r.getY() + r.getHeight() * (2.0/3)), (int)(r.getWidth() * .2), (int)(r.getHeight() * .1));
 		} else {
@@ -566,58 +663,6 @@ public class Menu extends JPanel implements ActionListener {
 			if(true)
 				labels[7].setText("Enchanted Steel - It may look exactly the same, but trust me your sword is all sparkily and magical now. Just pertend to see the effect while so slice your enemies.");
 			labels[7].setBounds((int)(r.getX() + r.getWidth() * .7), (int)(r.getY() + r.getHeight() * (49.0/75)), (int)(r.getWidth() * .2), (int)(r.getHeight() * (2.0/25)));
-		}
-	}
-	
-	private void addLabels(Container c) {
-		for(int i = 0; i < labels.length; i++)
-			c.add(labels[i]);
-	}
-	
-	private void removeLabels(Container c) {
-		for(int i = 0; i < labels.length; i++)
-			c.remove(labels[i]);
-	}
-	
-	private boolean hasButtons() {
-		if(buttons == null)
-			return false;
-		return true;
-	}
-	
-	private boolean hasLabels() {
-		if(labels == null)
-			return false;
-		return true;
-	}
-	
-	public void actionPerformed(ActionEvent e) {
-		if("Exit".equals(e.getActionCommand())) {
-			System.exit(0);
-		} else if("Play".equals(e.getActionCommand())) {
-			Screen.setMenu("Story");
-		} else if("Continue".equals(e.getActionCommand())) {
-			Screen.setMenu("None");
-		} else if("Help".equals(e.getActionCommand())) {
-			Screen.setMenu("Help");
-		} else if("Back".equals(e.getActionCommand())) {
-			Screen.setMenu("None");
-		} else if("Back2".equals(e.getActionCommand())) {
-			Screen.setMenu("Start");
-		} else if("New Game".equals(e.getActionCommand())) {
-			Game.restartGame();
-		} else if("SelectH".equals(e.getActionCommand())) {
-			Game.getPlayer().setSelectedPotion("Health");
-		} else if("SelectM".equals(e.getActionCommand())) {
-			Game.getPlayer().setSelectedPotion("Mana");
-		} else if("SelectD".equals(e.getActionCommand())) {
-			Game.getPlayer().setSword(new Sword("Dagger"));
-		} else if("SelectS".equals(e.getActionCommand())) {
-			if(Game.getPlayer().getSaberUnlocked())
-				Game.getPlayer().setSword(new Sword("Saber"));
-		} else if("SelectK".equals(e.getActionCommand())) {
-			if(Game.getPlayer().getKatanaUnlocked())
-				Game.getPlayer().setSword(new Sword("Katana"));
 		}
 	}
 }
