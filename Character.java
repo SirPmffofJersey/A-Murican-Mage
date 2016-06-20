@@ -225,12 +225,12 @@ public abstract class Character {
 
 	//Method to attack another charcter, if in range 
 	public void attack(Character other) {
-		if (other.dimensions.getX() - dimensions.getX() <= sword.getRange()
+		if (canAttack(other) && other.dimensions.getX() - dimensions.getX() <= sword.getRange()
 				|| other.dimensions.getY() - dimensions.getY() <= sword.getRange()
 				|| (other.dimensions.getY() - dimensions.getY()) / (other.dimensions.getX() - dimensions.getX()) <= sword
 						.getRange()) {
 			attackWaitTime += 10;
-			other.setHealth(other.getHealth() - sword.getDamage());
+			other.attacked(damage + sword.getDamage());
 		}
 	}
 
