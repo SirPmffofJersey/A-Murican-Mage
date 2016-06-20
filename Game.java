@@ -43,7 +43,12 @@ public class Game implements ActionListener{
     private static ArrayList<Projectile> projectiles;
  
     
-    
+    /**
+     * Game's constructor.
+     * Creates a player, screen and map,
+     * as wellas two ArrayLists, enemies and projectiles,
+     * starts the game's timer, and set generateEnemies to true
+     */
     public Game() {
     	player = new Player();
         screen = new Screen();
@@ -55,6 +60,12 @@ public class Game implements ActionListener{
         timer.start();
     }
     
+    /**
+     * Game's constructor.
+     * Creates a player, screen and map,
+     * as wellas two ArrayLists, enemies and projectiles,
+     * starts the game's timer, and set generateEnemies to true
+     */
     public void actionPerformed(ActionEvent a) {
         screen.repaint();
         if(inGame) {
@@ -107,7 +118,8 @@ public class Game implements ActionListener{
     public static void exitGame() {
         inGame = false;
     }
-
+    
+    //Accessor Methods
     public static Rectangle getBackgroundDim(Image i, ImageObserver io) {
 		Rectangle r = Screen.getFrameDim();
 		Rectangle temp = null;
@@ -150,6 +162,9 @@ public class Game implements ActionListener{
     
     public static void generateEnemies() {generateEnemies = true;}
     
+    /**
+     * Adds different enemies to the enemies ArrayList based on the room 
+     */
     private static void generateEnemies(int room){
     	generateEnemies = false;
         if(room == 2 || room == 4){
@@ -234,7 +249,9 @@ public class Game implements ActionListener{
         }
     }
     
-	
+    /**
+     * Stops timer and creates a new Game.
+     */
     public static void restartGame() {
     	timer.stop();
     	game = new Game();
