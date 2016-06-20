@@ -2,7 +2,7 @@
 /**
  * Write a description of class AttackSpell here.
  * 
- * @Nathan Nash
+ * @author Nathan Nash
  * @version (a version number or a date)
  */
 import java.awt.Point;
