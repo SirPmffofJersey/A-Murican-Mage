@@ -10,6 +10,14 @@ import Main.Game;
 import Spell.AttackSpell;
 import Spell.Buff;
 
+/**
+ * <h1> Projectile Class </h1>
+ * This class represents a projectile sent by
+ * an AttackSpell
+ * 
+ * @author Douglas Fisher
+ * @author 6/11/16
+ */
 public class Projectile {
 	private Rectangle dim;
 	private AttackSpell type;
@@ -22,6 +30,12 @@ public class Projectile {
 	private Image image;
 	private Buff b;
 	
+	/**
+	 * This is a constructor that builds a projectile and 
+	 * Initializes most of the fields.
+	 * @param t This represents the AttackSpell that "sent" the projectile
+	 * @param mouse This is where the player clicked to trigger a projectile being sent
+	 */
 	public Projectile(AttackSpell t, Point mouse) {
 		type = t;
 		mouse = Game.getScreen().getGameGraphics().mouseToPointConv(mouse);
@@ -54,13 +68,36 @@ public class Projectile {
 			image = new ImageIcon(getClass().getResource("/" + t.getName() + "4.gif")).getImage();
 	}
 	
-	public void move() {
-		dim.setLocation((int)(dim.getX() + xRange * distanceToTravel), (int)(dim.getY() + yRange * distanceToTravel));
-		if(Math.abs(dim.getX() - xStart) > Math.abs(xRange) && Math.abs(dim.getY()) - yStart > Math.abs(yRange))
-			toBeRemoved = true;
-		hitWall();
-	}
+	/**
+	 * This method returns this projectile's image.
+	 * @return Image This is the projectiles image
+	 */
+	public Image getImage() {return image;}
 	
+	/**
+	 * This method returns this projectile's dimensions.
+	 * @return Rectangle This is the projectile's dimensions
+	 */
+	public Rectangle getDim() {return dim;}
+	
+	/**
+	 * This method returns the AttackSpell that "sent" this 
+	 * projectile.
+	 * @return AttackSpell This is the AttackSpell that "sent" this projectile
+	 */
+	public AttackSpell getSpell() {return type;}
+	
+	/**
+	 * This method returns the buff associated with this projectile.
+	 * Returns null is no Buff is associated with the projectile.
+	 * @return Buff This is the buff associated with this projectile
+	 */
+	public Buff getBuff() {return b;}
+	
+	/**
+	 * This method detects if the projectile has reached the bounds of the
+	 * room and if so sets them to be deleted.
+	 */
 	public void hitWall() {
 		int maxX = (int)(Game.getMap().getCurrentRoom().getDim().getX() + Game.getMap().getCurrentRoom().getDim().getWidth() - dim.getWidth());
 		int maxY = (int)(Game.getMap().getCurrentRoom().getDim().getY() + Game.getMap().getCurrentRoom().getDim().getHeight() - dim.getHeight());
@@ -74,23 +111,25 @@ public class Projectile {
 			toBeRemoved = true;
 	}
 	
-	public void setToBeRemoved() {
-		toBeRemoved = true;
+	/**
+	 * This method moves the projectile a preset distance in the x and y direction.
+	 */
+	public void move() {
+		dim.setLocation((int)(dim.getX() + xRange * distanceToTravel), (int)(dim.getY() + yRange * distanceToTravel));
+		if(Math.abs(dim.getX() - xStart) > Math.abs(xRange) && Math.abs(dim.getY()) - yStart > Math.abs(yRange))
+			toBeRemoved = true;
+		hitWall();
 	}
 	
+	/**
+	 * This method sets the toBeRomved variable to true.
+	 */
+	public void setToBeRemoved() {toBeRemoved = true;}
+	
+	/**
+	 * This method returns a boolean representing if the projectile
+	 * needs to be removed.
+	 * @return boolean This is the field toBeRemoved
+	 */
 	public boolean toBeRemoved() {return toBeRemoved;}
-	
-	public Image getImage() {
-		return image;
-	}
-	
-	public Rectangle getDim() {return dim;}
-	
-	public AttackSpell getSpell() {
-		return type;
-	}
-	
-	public Buff getBuff() {
-		return b;
-	}
 }
