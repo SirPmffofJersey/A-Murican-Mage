@@ -2,6 +2,17 @@ import java.awt.Rectangle;
 
 import Item.Sword;
 import Spell.Buff;
+
+/**
+ * Cultists Class:
+ * The cultists class is an extension of the enemy class 
+ * it adds a buff, which stuns the player for a couple of
+ * seconds. 
+ * 
+ * @author Jimmy Greaves
+ * @version 5.6 6/15/16
+ */
+
 public class Cultists extends Enemies
 {
     private Buff b;
