@@ -42,7 +42,6 @@ public class Crunch extends Bosses
 			Game.getPlayer().getLoot((Enemies)this);
 			Game.getPlayer().addExperiance();
 			Game.getScreen().getGameGraphics().addString("You Beat Cap'n Crunchstie");
-			Game.getScreen().getGameGraphics().addString("You unlocked the saber");
 			return true;
 		}
 		return false;
