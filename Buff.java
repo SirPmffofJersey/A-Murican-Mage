@@ -2,7 +2,7 @@
 /**
  * Write a description of class Buff here.
  * 
- * @author (your name) 
+ * @author Nathan Nash 
  * @version (a version number or a date)
  */
 import java.util.Timer;
@@ -13,28 +13,28 @@ import Main.Game;
 public class Buff
 {
     //fields
-    private String name;
-    private String affectedStat;
-    private int duration;
-    private int severity;
+    private String name; //name of the buff
+    private String affectedStat; //stat that the buff affects
+    private int duration; //how long the buff lasts
+    private int severity; //the magnitude of the buff
     private Charactor.Character affected;
     
     //constructor
     public Buff(String n) {
     	name = n;
-    	if(name.equals("burn")) {
+    	if(name.equals("burn")) { //Burning debuff
     		affectedStat = "health";
     		duration = 5;
     		severity = 5;
-    	} else if(name.equals("stun")) {
+    	} else if(name.equals("stun")) { //stunned debuff
     		affectedStat = "enabled";
     		duration = 2;
     		severity = 5;
-    	} else if(name.equals("speed")) {
+    	} else if(name.equals("speed")) { //"Magic" Powder buff
     		affectedStat = "speed";
     		duration = 5;
     		severity = 10;
-    	} else if(name.equals("defense")) {
+    	} else if(name.equals("defense")) { //Armor Plated Armor buff
     		affectedStat = "defense";
     		duration = 5;
     		severity = 10;
@@ -46,19 +46,19 @@ public class Buff
     }
     
     //methods
-    public String getName()
+    public String getName() //returns the name of the buff
     {return name;}
     
-    public String getAffected()
+    public String getAffected() //returns the stat that the buff changes
     {return affectedStat;}
     
-    public int getDuration()
+    public int getDuration() //returns how long the buff lasts
     {return duration;}
     
-    public int getSeverity()
+    public int getSeverity() //returns the magnitude of the buff
     {return severity;}
     
-    public void add(Charactor.Character c) {
+    public void add(Charactor.Character c) { //adds to stats
     	affected = c;
     	Game.getScreen().getGameGraphics().addString("You gave the " + c.getName() + " a " + name + " buff");
     	final Timer timer = new Timer();
@@ -92,7 +92,7 @@ public class Buff
         }, 1000, 1000);
     }
     
-    private void remove() {
+    private void remove() { //lowers stats
     	if(affectedStat.equals("speed")) {
        			affected.setSpeed(affected.getSpeed() - severity);
        	} else if(affectedStat.equals("defense")) {
