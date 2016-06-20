@@ -6,7 +6,7 @@ import javax.swing.ImageIcon;
  * description: anything in a room's environment that isn't a character. This includes
  * walls, pillars(walls in the middle of a room), and doorways. 
  * 
- * @author (your name) 
+ * @author Nathan Nash
  * @version (a version number or a date)
  */
 public class Obstacle
