@@ -9,6 +9,16 @@ import Item.Sword;
 import Main.Game;
 import Spell.AttackSpell;
 import Spell.Buff;
+
+/**
+ * Player Class:
+ * The player class ectends the character class and is responsible 
+ * for all of the players actions; how they fight, move, use items etc. 
+ *
+ * 
+ * @author Jimmy Greaves
+ * @version 5.6 6/18/16
+ */
 public class Player extends Character implements KeyListener
 {
     private int exp = 0;
@@ -46,6 +56,7 @@ public class Player extends Character implements KeyListener
 		repCount = 10;
     }
     
+    //Increases all the stats when the character gains a level
     public void levelUp()
     {
         setLevel(getLevel() +1);
@@ -57,6 +68,7 @@ public class Player extends Character implements KeyListener
         setDefense((int)(getDefense() + getDefense() * .25));
     }
     
+    //method to regain health and mana 
     public void regenerate()
     {
     	if(repCount <= 0) {
@@ -75,6 +87,7 @@ public class Player extends Character implements KeyListener
     	}
     }
     
+    //method to add what the enemy droped to the player's inventory 
     public void getLoot(Enemies other)
     {
         String d = other.dropLoot();
@@ -95,18 +108,21 @@ public class Player extends Character implements KeyListener
         }
     }
     
+    //returns the potion that is currently equipped 
     public Potion getEquippedPotion() {
 		if(potions[0].getEquipped())
 			return potions[0];
 		return potions[1];
 	}
     
+    //returns the name of the equipped potion 
     public String getEquippedPotionName() {
     	if(potions[0].getEquipped())
 			return "Health";
 		return "Mana";
     }
-
+	
+	//Method to change the selected potion 
 	public void setSelectedPotion(String type) {
 		if(type.equals("Health")) {
 			potions[0].setEquipped(true);
@@ -117,8 +133,10 @@ public class Player extends Character implements KeyListener
 		}
 	}
 	
+	//Checks if the saber is unlocked 
 	public boolean getSaberUnlocked() {return saberUnlocked;}
 	
+	//Checks if the katana is unlocked 
 	public boolean getKatanaUnlocked() {return katanaUnlocked;}
 	
 	public void setSaberUnlocked(boolean s) {saberUnlocked = s;}
@@ -129,6 +147,7 @@ public class Player extends Character implements KeyListener
 	
 	public void decrementAttackCount() {attackCounter--;}
 	
+	//Method returns where the sword is based on the direction the player is facing 
 	public Rectangle setSwordDim() {
 		int d = getDirection();
 		if(d == 1)
@@ -142,11 +161,13 @@ public class Player extends Character implements KeyListener
 		return null;
 	}
 	
+	//Stops the sword and the player from attacking 
 	public void stopAttack() {
 		getSword().setDim(null, 1);
 		attackCounter = -1;
 	}
     
+    //Moves the player based on which key is pressed
     public void move(KeyEvent e) 
     {   
     	if(getEnabled()) {
@@ -208,6 +229,7 @@ public class Player extends Character implements KeyListener
          
     }
     
+    //Method to attack either spell or sword depending on the click  
     public void attack(MouseEvent e)
     {
     	if(getEnabled()) {
@@ -228,6 +250,7 @@ public class Player extends Character implements KeyListener
     	}
     }
     
+    //Adds experiance to the exp and checks if the player levels up 
     public void addExperiance() 
     {
         exp += 10; 
@@ -239,6 +262,7 @@ public class Player extends Character implements KeyListener
         }
     }
     
+    //Checks what spell is currently equipped 
     public AttackSpell getEquippedSpell() {
     	if(selectedSpell == 1)
     		return fire;
@@ -247,10 +271,11 @@ public class Player extends Character implements KeyListener
     	return null;
     }
     
+    //returns an integer based on what spell the player has selected 
     public int getSelectedSpell() {
     	return selectedSpell;
     }
-	
+	//Casts the spell that is currently selected 
 	public void cast(Point p) {
 		Buff b;
 		switch (selectedSpell) {
@@ -290,6 +315,7 @@ public class Player extends Character implements KeyListener
 		}
 	}
     
+    //Forces the player to a certain position 
     public void forceTo(Point p) {
     	System.out.println(p.getX());
     	System.out.println(p.getY());
