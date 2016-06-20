@@ -249,6 +249,10 @@ public class Game implements ActionListener{
         }
     }
     
+    public static void main(String[] args) {
+    	game = new Game();
+    }
+    
     /**
      * Stops timer and creates a new Game.
      */
