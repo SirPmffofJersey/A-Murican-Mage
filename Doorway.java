@@ -5,7 +5,7 @@ import Main.Game;
 /**
  * Write a description of class Doorway here.
  * 
- * @author (your name) 
+ * @author Nathan Nash
  * @version (a version number or a date)
  */
 public class Doorway extends Obstacle
