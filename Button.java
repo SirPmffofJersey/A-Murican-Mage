@@ -27,7 +27,10 @@ import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
 /**
- * This is example code. Feel free to copy it.
+ * <h1> Nebraska Buttons </h1>
+ * This is code for differently shaped and colored buttons
+ * Gotten from http://www.7128.com/articles/resourcesarticle061227.html
+ * Permission to use given at the bottom of the page
  *
  * @author John Bannick, 7-128 Software
  * @version 1.0.0
