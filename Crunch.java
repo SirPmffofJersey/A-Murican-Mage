@@ -17,17 +17,26 @@ import Item.Sword;
 import Main.Game;
 public class Crunch extends Bosses 
 {
-	
+    /**
+     * Cruncstie's constructor which calls the super constructor from Character
+     * 
+     */
     public Crunch(String name, int hp, int mp, int maxHp, int maxMp,int atk, int def, int spd, int lvl, Rectangle dim, Sword e,int direct)
     {
     	
         super(name,hp,mp,maxHp,maxMp,atk,def,spd,lvl,dim,e,direct);
     }
-    
+    /**
+     * Drops Saber
+     */
     public String dropLoot() {
     	return "Saber";
     }
-    
+    /**
+     * Return true if Crunctie is dead
+     * Drops Saber
+     * Adds Experience
+     */
     public boolean isDead() {
 		if (getHealth() <= 0) {
 			Game.getPlayer().getLoot((Enemies)this);
@@ -38,7 +47,9 @@ public class Crunch extends Bosses
 		}
 		return false;
 	}
-    
+    /**
+     * spawns enemies every two seconds and stops when Crunchstie dies
+     */
     public void spawnEnemies(ArrayList<Enemies> e, Character c){
     	final Timer timer = new Timer();
         timer.schedule(new TimerTask(){
