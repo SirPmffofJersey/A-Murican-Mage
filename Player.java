@@ -19,7 +19,7 @@ import Spell.Buff;
  * @author Jimmy Greaves
  * @version 5.6 6/18/16
  */
-public class Player extends Character implements KeyListener
+public class Player extends Character
 {
     private int exp = 0;
     private int expLimit = 100;
@@ -323,21 +323,22 @@ public class Player extends Character implements KeyListener
     	System.out.println(getDimensions().getX());
     	System.out.println(getDimensions().getY());
     }
-
-	@Override
-	public void keyPressed(KeyEvent arg0) {
-		// TODO Auto-generated method stub
-		
+    
+    public void attacked(int a) {
+	if((a - getDefense()) <= 0)
+           	setHealth(getHealth()-1); 
+         else
+        	setHealth(getHealth() - a + getDefense());
 	}
 
-	@Override
-	public void keyReleased(KeyEvent arg0) {
-		// TODO Auto-generated method stub
-		
+	public boolean canAttack(Character c) {
+		if(getEnabled()) {
+			if(getWait() <= 0) {
+				return true;
+			} else {
+				decrementWait();
+			}
+		}
+		return false;
 	}
-
-	@Override
-	public void keyTyped(KeyEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
+}
