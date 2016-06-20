@@ -324,13 +324,15 @@ public class Player extends Character
     	System.out.println(getDimensions().getY());
     }
     
+    //Decreases own health based on how much damage was dealt
     public void attacked(int a) {
 	if((a - getDefense()) <= 0)
            	setHealth(getHealth()-1); 
          else
         	setHealth(getHealth() - a + getDefense());
 	}
-
+	
+	//Makes sure that the character can attack another character
 	public boolean canAttack(Character c) {
 		if(getEnabled()) {
 			if(getWait() <= 0) {
