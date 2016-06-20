@@ -1,28 +1,35 @@
-package Graphics;
-
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import Main.Game;
 
-public class Screen extends JPanel implements MouseListener{
-   /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;	//Research more
+/**
+ * <h1> Screen Class: </h1>
+ * This class stores and runs all of the graphics
+ * for the game.
+ * 
+ * @author Douglas Fisher
+ * @since 6/5/16
+ */
+public class Screen extends JPanel {
+	
+	private static final long serialVersionUID = 1L;
 	private static JFrame frame;
 	private static boolean withinMenu;
-	private static String menuName;
 	private static Menu menu;
 	private static GameGraphics game;
    
+	/**
+	 * This is a constructor that builds an object
+	 * of the Screen class.
+	 */
 	public Screen() {
 		frame = new JFrame();
 		frame.setUndecorated(true);
@@ -31,8 +38,7 @@ public class Screen extends JPanel implements MouseListener{
 		frame.setContentPane(this);
 		frame.setFocusable(true);
 		frame.requestFocus();
-		frame.addKeyListener(new KeyAdapter()
-		{
+		frame.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent a)
 			{
 				if(a.getKeyCode() == KeyEvent.VK_ESCAPE) {
@@ -49,28 +55,42 @@ public class Screen extends JPanel implements MouseListener{
 		
         menu = new Menu("Start");
         withinMenu = true;
-        menuName = "Start";
         menu.addJComp(this);
         
         game = new GameGraphics();
-        addMouseListener(this);
+        addMouseListener(new MouseAdapter() {public void mouseClicked(MouseEvent e) {Game.getPlayer().attack(e);}});
         
         this.setDoubleBuffered(true);
-        
-        /*
-        getInputMap().put(KeyStroke.getKeyStroke("SPACE"), "pauseMenu");
-        getActionMap().put("pauseMenu", new AbstractAction() {
-        	public void actionPerformed(ActionEvent e) {
-        		setMenu("Pause");
-        	}
-        });
-        */
     }
 	
-	public JFrame getFrame() {
-		return frame;
-	}
+	/**
+	 * This method returns this screen's JFrame.
+	 * @return JFrame This is the screen's JFrame
+	 */
+	public JFrame getFrame() {return frame;}
 	
+	/**
+	 * This method returns the bounds of this screen's
+	 * JFrame.
+	 * @return Rectangle This is the bounds of this screen's JFrame
+	 */
+	public static Rectangle getFrameDim() {return frame.getBounds();}
+	
+	/**
+	 * This method returns this screen's GameGraphics object.
+	 * @return GameGraphics This is the screen's GameGraphics
+	 */
+	public GameGraphics getGameGraphics() {return game;}
+	
+	/**
+	 * This method returns whether or not a menu is being displayed.
+	 * @return boolean This is the withinMenu field
+	 */
+	public static boolean inMenu() {return withinMenu;}
+	
+	/**
+	 * This method paints either a menu or the game play.
+	 */
 	public void paintComponent(Graphics g) {
 		if(menu != null) {
 			menu.paintComponent(g);
@@ -80,8 +100,12 @@ public class Screen extends JPanel implements MouseListener{
 		}
 	}
 	
+	/**
+	 * This method changes the menu based on the String
+	 * inputed. If "None" the menu is set to null.
+	 * @param m This is the name of the new menu
+	 */
 	public static void setMenu(String m) {
-		menuName = m;
 		if(m.equals("None")) {
 			game.start(frame.getContentPane());
 			withinMenu = false;
@@ -97,45 +121,5 @@ public class Screen extends JPanel implements MouseListener{
 			menu = new Menu(m);
 			menu.addJComp(frame.getContentPane());
 		}
-	}
-	
-	public static boolean inMenu() {return withinMenu;}
-	
-	public static String getMenuName() {return menuName;}
-	
-	public static Menu getMenu() {return menu;}
-	
-	public static Rectangle getFrameDim() {return frame.getBounds();}
-	
-	public GameGraphics getGameGraphics() {return game;}
-	
-	@Override
-	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
-		Game.getPlayer().attack(e);
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
 	}
 }
