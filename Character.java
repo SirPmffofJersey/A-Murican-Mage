@@ -23,7 +23,7 @@ import Spell.Buff;
  * @author Jimmy Greaves and Will Roberts 
  * @version 5.6 6/18/16
  */
-public class Character {
+public abstract class Character {
 	// Basic Character Stats
 	private String name;
 	private int health;
@@ -244,30 +244,8 @@ public class Character {
 		return false;
 	}
 
-	//Decreases own health based on how much damage was dealt 
-	public void attacked(int a) {
-		if(!immune) {
-			if((a - defense) <= 0)
-            	health -= 1; 
-        	else
-            	health -= (a - defense);
-        	Timer timer = new Timer();
-        	timer.schedule(new TimerTask(){
-            	public void run()
-            	{
-                	seconds ++; 
-                	immune = true; 
-                	if(seconds >= 8)
-                	{
-                    		immune = false;  
-                    		seconds = 0;
-                    		timer.cancel();
-                    		timer.purge(); 
-                	}
-            	}
-        	}, 1000 ,1000);  
-		}
-	}
+	//Decreases own health based on how much damage was dealt (abstract)
+	public abstract void attacked(int a);
 
 	
 	public boolean collision(Character c) {
@@ -343,21 +321,8 @@ public class Character {
 
 	}
 
-	//Makes sure that the character can attack another character 
-	public boolean canAttack(Character c) {
-		if(enabled) {
-			if(attackWaitTime <= 0) {
-				int coordinateX = Math.abs((int) c.getDimensions().getX() - (int) dimensions.getX());
-				int coordinateY = Math.abs((int) c.getDimensions().getY() - (int) dimensions.getY());
-				int distance = coordinateX + coordinateY;
-				if (distance <= 100)
-					return true;
-			} else {
-				attackWaitTime--;
-			}
-		}
-		return false;
-	}
+	//Makes sure that the character can attack another character (abstract)
+	public abstract boolean canAttack(Character c);
 
 	//Basic AI for all characters, makes them all move toward one character. 
 	public void moveTowardPlayer(Character c) {
