@@ -11,7 +11,7 @@ import javax.swing.ImageIcon;
  */
 public class Obstacle
 {
-  private Rectangle dimensions;
+  private Rectangle dimensions; //bounds and location of the object
   private Image image;
   
   public Obstacle(Rectangle dim, String imgName)
@@ -20,24 +20,24 @@ public class Obstacle
    image = new ImageIcon(getClass().getResource("/" + imgName + ".gif")).getImage();
   }
   
-  public boolean isColliding(Rectangle dim)
+  public boolean isColliding(Rectangle dim) //determines if dim is at all within the area of dimensions or intersecting it
   {return dimensions.contains(dim) || dimensions.intersects(dim);}
   
-  public Image getImage()
+  public Image getImage() //returns the name of which image should be displayed
   {return image;}
   
-  public Rectangle getDimensions()
+  public Rectangle getDimensions() //returns the 'dimensions' field of the obstacle
   {return dimensions;}
   
-  public void setLoc(int x, int y)
+  public void setLoc(int x, int y) //changes the location of the 'dimensions' field
   {
    dimensions.setLocation(x,y);
   }
   
-  public Point getLoc()
+  public Point getLoc() //returns the location of 'dimensions' field
   {return dimensions.getLocation();}
   
-  public void setImage(String name)
+  public void setImage(String name) //changes the name of which image should be displayed
   {image=new ImageIcon(getClass().getResource("/" + name + ".gif")).getImage();}
   
 }
