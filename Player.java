@@ -338,7 +338,7 @@ public class Player extends Character
 	//Makes sure that the character can attack another character
 	public boolean canAttack(Character c) {
 		if(getEnabled()) {
-			if(attackCount <= 0)
+			if(attackCounter <= 0)
 				return true;
 		}
 		return false;
