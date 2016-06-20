@@ -2,7 +2,7 @@
 /**
  * Holds an array of rooms and holds which room the player is in.
  * 
- * @author (your name) 
+ * @author Nathan Nash
  * @version (a version number or a date)
  */
 public class Map {
