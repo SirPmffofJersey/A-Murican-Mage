@@ -23,6 +23,7 @@ public class Dump extends Bosses
         super(name,hp,mp,maxHp,maxMp,atk,def,spd,lvl,dim,e,direct);
     }
     
+    //Method to spawn cultists every 3 seconds 
     public void spawnEnemies(ArrayList<Enemies> e, Character c){
     	final Timer timer = new Timer();
         timer.schedule(new TimerTask(){
@@ -42,6 +43,7 @@ public class Dump extends Bosses
     	return;
     }
     
+    //Method to check if Dump's dead and displays the win screen 
     public boolean isDead() {
 		if (getHealth() <= 0) {
 			Game.getPlayer().getLoot((Enemies)this);
