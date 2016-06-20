@@ -188,21 +188,26 @@ public class Character {
 	
 	public void setWait(int w) {attackWaitTime = w;}
 
+	//Adds a buff to the array list of buffs
 	public void addBuff(Buff b) {
 		buffs.add(b);
 		b.add(this);
 	}
 	
+	//Removes a certain buff from the array list of buffs 
 	public void removeBuff(Buff b) {buffs.remove(b);}
 
+	// Resets the sprite of the character 
 	public void resetImage() {
 		image = new ImageIcon(getClass().getResource("/" + name + direction + ".gif")).getImage();;
 	}
-
+	
+	//Change the current weapon of the character 
 	public void setSword(Sword s) {
 		sword = s;
 	}
-
+	
+	//Changes the characters location 
 	public void setLocation(Point loc) {
 		nextDim = new Rectangle((int)loc.getX(), (int)loc.getY(), (int)dimensions.getWidth(), (int)dimensions.getHeight());
 		for(int i = 0; i < Game.getMap().getCurrentRoom().getNumberOfObstacles(); i++)
@@ -212,11 +217,13 @@ public class Character {
 		dimensions = nextDim;
 		collision(Game.getPlayer().getSword(), loc);
 	}
-
+	
+	//Checks which direction the player is facing 
 	public int movementState() {
 		return state % 4;
 	}
 
+	//Method to attack another charcter, if in range 
 	public void attack(Character other) {
 		if (other.dimensions.getX() - dimensions.getX() <= sword.getRange()
 				|| other.dimensions.getY() - dimensions.getY() <= sword.getRange()
@@ -227,6 +234,7 @@ public class Character {
 		}
 	}
 
+	//Checks if the character has no health  
 	public boolean isDead() {
 		if (health <= 0) {
 			Game.getPlayer().getLoot((Enemies)this);
@@ -236,10 +244,7 @@ public class Character {
 		return false;
 	}
 
-	public void move() {
-		//dimensions.move((int) location.getX() + speed, (int) location.getY() + speed);
-	}
-
+	//Decreases own health based on how much damage was dealt 
 	public void attacked(int a) {
 		if(!immune) {
 			if((a - defense) <= 0)
@@ -263,22 +268,13 @@ public class Character {
         	}, 1000 ,1000);  
 		}
 	}
-	
-	/*
-	public boolean collision(Character c) {
-		int coordinateX = Math.abs((int) c.getDimensions().getX() - (int) location.getX());
-		int coordinateY = Math.abs((int) c.getDimensions().getY() - (int) location.getY());
-		int distance = coordinateX + coordinateY;
-		if (distance <= 50)
-			return true;
-		return false;
-	}
-	*/
+
 	
 	public boolean collision(Character c) {
 		return false;
 	}
 	
+	//Checks if a charcter collides with a projectile
 	public boolean collision(Projectile p){
 		if(p.getDim().intersects(dimensions) && Game.getPlayer() != this) {
 			attacked(p.getSpell().getDamage());
@@ -290,6 +286,7 @@ public class Character {
 		return false;
 	}
 	
+	//Checks if a character gets hit by a sword 
 	public boolean collision(Sword s, Point p) {
 		if(s.getDim() == null)
 			return false;
@@ -300,6 +297,7 @@ public class Character {
 		return false;
 	}
 	
+	//Checks if the character hits an obstacle 
 	public boolean collision(Obstacle o) {
 		Doorway d = null;
 		if(o instanceof Doorway) {
@@ -330,6 +328,7 @@ public class Character {
 		return false;
 	}
 
+	//checks if the player hit the edge of the screen 
 	public void hitWall() {
 		int maxX = (int)(Game.getMap().getCurrentRoom().getDim().getX() + Game.getMap().getCurrentRoom().getDim().getWidth() - dimensions.getWidth());
 		int maxY = (int)(Game.getMap().getCurrentRoom().getDim().getY() + Game.getMap().getCurrentRoom().getDim().getHeight() - dimensions.getHeight());
@@ -344,6 +343,7 @@ public class Character {
 
 	}
 
+	//Makes sure that the character can attack another character 
 	public boolean canAttack(Character c) {
 		if(enabled) {
 			if(attackWaitTime <= 0) {
@@ -359,6 +359,7 @@ public class Character {
 		return false;
 	}
 
+	//Basic AI for all characters, makes them all move toward one character. 
 	public void moveTowardPlayer(Character c) {
 		if(enabled) {
 			int newD = 0;
@@ -386,6 +387,7 @@ public class Character {
 		}
 	}
 	
+	//Makes sure the character is in the map. 
 	public boolean insideMap(int roomNum)
     	{
         	return dimensions.getX() > new Room(roomNum).getDim().getX() && dimensions.getY() > new Room(roomNum).getDim().getY() && dimensions.getX() < new Room(roomNum).getDim().getX() + new Room(roomNum).getDim().getWidth() && dimensions.getY() < new Room(roomNum).getDim().getY() + new Room(roomNum).getDim().getHeight();
