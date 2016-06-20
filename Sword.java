@@ -45,7 +45,7 @@ public class Sword {
 			WIDTH = 20;
 			setImage(1);
 		} else {
-			damage = 5;
+			damage = 10;
 			range = 30;
 			swingSpeed = 20;
 			WIDTH = 10;
