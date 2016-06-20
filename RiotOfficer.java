@@ -32,6 +32,7 @@ public class RiotOfficer extends Enemies
         super(name,hp,mp,maxHp,maxMp,atk,def,spd,lvl,loc,dim,e,direct);
     }
     
+    //Has the riot officer only take half the damage of an attack
     public void attacked(Character c)
     {
         super.attacked((c.getAttack() / 2));
