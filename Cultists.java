@@ -23,6 +23,7 @@ public class Cultists extends Enemies
         b = new Buff("stun");
     }
     
+    //Checks if they are within range of the character 
     public boolean canAttack(Character c)
     {
         int coordinateX = Math.abs((int)(c.getDimensions().getX() - super.getDimensions().getX()));
@@ -36,6 +37,7 @@ public class Cultists extends Enemies
         return false;  
     }
     
+    //Stuns the character if they are within range
     public void attack(Character c)
     {
         if(canAttack(c))
