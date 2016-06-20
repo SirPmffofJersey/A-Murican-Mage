@@ -12,13 +12,12 @@ import Main.Game;
 
 public class AttackSpell
 {
-    private final String NAME;
-    private final int RANGE;
-    private final int DAMAGE;
-    private final int COST;
-    private final double COOL_DOWN_LENGTH;
-    private int coolDown;
-    
+    private final String NAME; //Name of the spell
+    private final int RANGE; //distance the spell goes
+    private final int DAMAGE; //damage the spell does
+    private final int COST; //how much mana it costs to use the spell
+    private final double COOL_DOWN_LENGTH; //how long it takes before you can use the spell again
+    private int coolDown; 
     public AttackSpell(String name)
     {
      if(name.equals("fire"))
@@ -50,23 +49,23 @@ public class AttackSpell
     	return false;
     }
     
-    public void createProjectile(Point p) {
+    public void createProjectile(Point p) { //makes a projectile that contains the information about the spell
     	Game.addProjectile(new Projectile(this, p));
     }
     
-    public String getName()
+    public String getName() //returns the name of the spell
     { return NAME;}
     
-    public int getRange()
+    public int getRange() //returns the range of the spell
     { return RANGE;}
     
-    public int getDamage()
+    public int getDamage() //returns the damage of the spell
     { return DAMAGE;}
     
-    public int getCost()
+    public int getCost() //returns the mana cost of the spell
     { return COST;}
         
-    public double getCoolDownLength()
+    public double getCoolDownLength() //returns the time it takes before you can use the spell
     { return COOL_DOWN_LENGTH;}
     
     public int getCoolDown()
