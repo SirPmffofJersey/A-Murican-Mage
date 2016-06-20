@@ -50,4 +50,46 @@ public class Enemies extends Character
     		return "Katana";
         return "Nothing"; 
     }
+    
+    //Makes sure that the character can attack another character
+    public boolean canAttack(Character c) {
+		if(getEnabled()) {
+			if(getWait() <= 0) {
+				int coordinateX = Math.abs((int) c.getDimensions().getX() - (int) getDimensions().getX());
+				int coordinateY = Math.abs((int) c.getDimensions().getY() - (int) getDimensions().getY());
+				int distance = coordinateX + coordinateY;
+				if (distance <= 100)
+					return true;
+			} else {
+				decrementWait();
+			}
+		}
+		return false;
+	}
+    
+    //Decreases own health based on how much damage was dealt
+    public void attacked(int a) {
+		if(!immune) {
+			if((a - getDefense()) <= 0)
+            	setHealth(getHealth()-1); 
+        	else
+        		setHealth(getHealth() - (a - getDefense()));
+        	Timer timer = new Timer();
+        	timer.schedule(new TimerTask(){
+        		int seconds = 0;
+            	public void run()
+            	{
+                	seconds ++; 
+                	immune = true; 
+                	if(seconds >= 3)
+                	{
+                    		immune = false;  
+                    		seconds = 0;
+                    		timer.cancel();
+                    		timer.purge(); 
+                	}
+            	}
+        	}, 1000 ,1000);  
+		}
+	}
 }
